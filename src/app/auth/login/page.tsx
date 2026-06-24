@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Zap, Eye, EyeOff, AlertCircle } from "lucide-react";
+import { Eye, EyeOff, AlertCircle } from "lucide-react";
+import { Navbar } from "@/components/layout/navbar";
 
 export default function LoginPage() {
   const [show, setShow] = useState(false);
@@ -87,16 +88,9 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      <div className="px-6 py-4 border-b border-neutral-100">
-        <Link href="/" className="flex items-center gap-2 cursor-pointer w-fit">
-          <div className="w-6 h-6 rounded bg-neutral-900 flex items-center justify-center">
-            <Zap className="w-3 h-3 text-white" fill="white" />
-          </div>
-          <span className="text-neutral-900 font-semibold text-sm">Buildr</span>
-        </Link>
-      </div>
+      <Navbar />
 
-      <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
+      <div className="flex-1 flex flex-col items-center justify-center px-4 py-12 pt-28">
         <div className="w-full max-w-sm">
           <h1 className="text-2xl font-bold text-neutral-900 mb-1">Welcome back</h1>
           <p className="text-neutral-500 text-sm mb-8">Sign in to continue building.</p>

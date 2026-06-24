@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Zap, ArrowLeft, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, CheckCircle2 } from "lucide-react";
+import { Navbar } from "@/components/layout/navbar";
 import { motion } from "framer-motion";
 
 export default function ForgotPasswordPage() {
@@ -18,16 +19,9 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      <div className="px-6 py-4 border-b border-neutral-100">
-        <Link href="/" className="flex items-center gap-2 cursor-pointer w-fit">
-          <div className="w-6 h-6 rounded bg-neutral-900 flex items-center justify-center">
-            <Zap className="w-3 h-3 text-white" fill="white" />
-          </div>
-          <span className="text-neutral-900 font-semibold text-sm">Buildr</span>
-        </Link>
-      </div>
+      <Navbar />
 
-      <div className="flex-1 flex flex-col items-center justify-center px-4 py-16">
+      <div className="flex-1 flex flex-col items-center justify-center px-4 py-16 pt-28">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}

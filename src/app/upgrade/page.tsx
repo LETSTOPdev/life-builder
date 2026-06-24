@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Check, Zap } from "lucide-react";
+import { Navbar } from "@/components/layout/navbar";
 
 const plans = [
   {
@@ -83,19 +84,9 @@ export default function UpgradePage() {
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
-      <div className="px-6 py-4 border-b border-neutral-100 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 cursor-pointer">
-          <div className="w-6 h-6 rounded bg-neutral-900 flex items-center justify-center">
-            <Zap className="w-3 h-3 text-white" fill="white" />
-          </div>
-          <span className="text-neutral-900 font-semibold text-sm">Buildr</span>
-        </Link>
-        <Link href="/" className="text-neutral-400 hover:text-neutral-700 text-sm cursor-pointer transition-colors">
-          ← Back
-        </Link>
-      </div>
+      <Navbar />
 
-      <div className="max-w-5xl mx-auto px-6 py-20">
+      <div className="max-w-5xl mx-auto px-6 pt-28 pb-20">
         <div className="text-center mb-14">
           <p className="text-neutral-400 text-xs font-medium tracking-widest uppercase mb-4">Pricing</p>
           <h1 className="text-4xl sm:text-5xl font-bold text-neutral-900 mb-4 tracking-tight leading-tight">

@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Zap, AlertCircle } from "lucide-react";
+import { ArrowRight, AlertCircle } from "lucide-react";
+import { Navbar } from "@/components/layout/navbar";
 
 function SocialLink({ icon, label, href }: { icon: React.ReactNode; label: string; href: string }) {
   return (
@@ -31,16 +32,9 @@ export default function AuthPage() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      <div className="px-6 py-4 border-b border-neutral-100">
-        <Link href="/" className="flex items-center gap-2 cursor-pointer w-fit">
-          <div className="w-6 h-6 rounded bg-neutral-900 flex items-center justify-center">
-            <Zap className="w-3 h-3 text-white" fill="white" />
-          </div>
-          <span className="text-neutral-900 font-semibold text-sm">Buildr</span>
-        </Link>
-      </div>
+      <Navbar />
 
-      <div className="flex-1 flex flex-col items-center justify-center px-4 py-16">
+      <div className="flex-1 flex flex-col items-center justify-center px-4 py-16 pt-28">
         <div className="w-full max-w-sm">
           <h1 className="text-2xl font-bold text-neutral-900 mb-2">Get started free</h1>
           <p className="text-neutral-500 text-sm mb-8">No credit card required. Free forever.</p>
