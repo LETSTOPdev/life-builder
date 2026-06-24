@@ -9,9 +9,7 @@ import { Footer } from "@/components/layout/footer";
 
 const OAUTH_ERRORS: Record<string, string> = {
   google_not_configured: "Google login is not set up yet — use email login.",
-  linkedin_not_configured: "LinkedIn login is not set up yet — use email login.",
   google_denied: "Google sign-in was cancelled.",
-  linkedin_denied: "LinkedIn sign-in was cancelled.",
   state_mismatch: "Security check failed. Please try again.",
   token_exchange: "Could not complete sign-in. Please try again.",
   no_email: "Your account has no email address. Please sign up with email.",
@@ -109,8 +107,8 @@ function LoginForm() {
       <h1 className="text-2xl font-bold text-neutral-900 mb-1">Welcome back</h1>
       <p className="text-neutral-500 text-sm mb-8">Sign in to continue building.</p>
 
-      {/* OAuth buttons */}
-      <div className="space-y-2 mb-6">
+      {/* Google OAuth */}
+      <div className="mb-6">
         <a
           href="/api/auth/google"
           className="w-full flex items-center gap-3 px-4 py-3 bg-neutral-50 border border-neutral-200 rounded-xl text-sm text-neutral-600 hover:text-neutral-900 hover:border-neutral-400 transition-all"
@@ -123,20 +121,11 @@ function LoginForm() {
           </svg>
           <span>Continue with Google</span>
         </a>
-        <a
-          href="/api/auth/linkedin"
-          className="w-full flex items-center gap-3 px-4 py-3 bg-neutral-50 border border-neutral-200 rounded-xl text-sm text-neutral-600 hover:text-neutral-900 hover:border-neutral-400 transition-all"
-        >
-          <svg viewBox="0 0 24 24" className="w-4 h-4 flex-shrink-0" fill="#0A66C2">
-            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-          </svg>
-          <span>Continue with LinkedIn</span>
-        </a>
       </div>
 
       <div className="flex items-center gap-3 mb-6">
         <div className="flex-1 h-px bg-neutral-200" />
-        <span className="text-neutral-400 text-xs">or</span>
+        <span className="text-neutral-400 text-xs">or sign in with email</span>
         <div className="flex-1 h-px bg-neutral-200" />
       </div>
 
