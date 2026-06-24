@@ -1,5 +1,5 @@
 import { Navbar } from "@/components/layout/navbar";
-import { HeroSection } from "@/components/ui/3d-hero-section-boxes";
+import { HeroSection } from "@/components/ui/hero-section";
 import { FeaturesSection } from "@/components/landing/features-section";
 import { HowItWorksSection } from "@/components/landing/how-it-works";
 import { SocialProofSection } from "@/components/landing/social-proof";

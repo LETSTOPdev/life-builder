@@ -8,11 +8,11 @@ function SocialLink({ icon, label, href }: { icon: React.ReactNode; label: strin
   return (
     <Link
       href={href}
-      className="w-full flex items-center gap-3 px-4 py-3 bg-[#161616] border border-white/12 rounded-xl text-sm text-white/60 hover:text-white hover:border-white/25 cursor-pointer transition-all group"
+      className="w-full flex items-center gap-3 px-4 py-3 bg-neutral-50 border border-neutral-200 rounded-xl text-sm text-neutral-500 hover:text-neutral-900 hover:border-neutral-400 cursor-pointer transition-all group"
     >
-      <span className="w-5 h-5 text-white/50 group-hover:text-white transition-colors flex-shrink-0">{icon}</span>
+      <span className="w-5 h-5 flex-shrink-0">{icon}</span>
       <span>{label}</span>
-      <ArrowRight className="w-3.5 h-3.5 ml-auto text-white/20 group-hover:text-white/40 group-hover:translate-x-0.5 transition-all" />
+      <ArrowRight className="w-3.5 h-3.5 ml-auto text-neutral-300 group-hover:text-neutral-500 group-hover:translate-x-0.5 transition-all" />
     </Link>
   );
 }
@@ -30,20 +30,20 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0c0c0c] flex flex-col">
-      <div className="px-6 py-4 border-b border-white/8">
+    <div className="min-h-screen bg-white flex flex-col">
+      <div className="px-6 py-4 border-b border-neutral-100">
         <Link href="/" className="flex items-center gap-2 cursor-pointer w-fit">
-          <div className="w-6 h-6 rounded bg-white flex items-center justify-center">
-            <Zap className="w-3 h-3 text-black" fill="black" />
+          <div className="w-6 h-6 rounded bg-neutral-900 flex items-center justify-center">
+            <Zap className="w-3 h-3 text-white" fill="white" />
           </div>
-          <span className="text-white font-semibold text-sm">Buildr</span>
+          <span className="text-neutral-900 font-semibold text-sm">Buildr</span>
         </Link>
       </div>
 
       <div className="flex-1 flex flex-col items-center justify-center px-4 py-16">
         <div className="w-full max-w-sm">
-          <h1 className="text-2xl font-bold text-white mb-2">Get started free</h1>
-          <p className="text-[#555] text-sm mb-8">No credit card required. Free forever.</p>
+          <h1 className="text-2xl font-bold text-neutral-900 mb-2">Get started free</h1>
+          <p className="text-neutral-500 text-sm mb-8">No credit card required. Free forever.</p>
 
           <div className="space-y-2 mb-6">
             <SocialLink
@@ -71,7 +71,7 @@ export default function AuthPage() {
               href="/onboarding"
               label="Continue with LinkedIn"
               icon={
-                <svg viewBox="0 0 24 24" className="w-full h-full" fill="currentColor">
+                <svg viewBox="0 0 24 24" className="w-full h-full" fill="#0A66C2">
                   <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
                 </svg>
               }
@@ -79,9 +79,9 @@ export default function AuthPage() {
           </div>
 
           <div className="flex items-center gap-3 mb-6">
-            <div className="flex-1 h-px bg-white/8" />
-            <span className="text-[#333] text-xs">or</span>
-            <div className="flex-1 h-px bg-white/8" />
+            <div className="flex-1 h-px bg-neutral-200" />
+            <span className="text-neutral-400 text-xs">or</span>
+            <div className="flex-1 h-px bg-neutral-200" />
           </div>
 
           <form onSubmit={handleEmail} className="space-y-2 mb-4" noValidate>
@@ -96,34 +96,34 @@ export default function AuthPage() {
                 autoComplete="email"
                 aria-invalid={!!error}
                 aria-describedby={error ? "auth-email-error" : undefined}
-                className={`w-full bg-[#161616] border text-white placeholder-[#333] text-sm px-4 py-3 rounded-xl focus:outline-none transition-colors ${error ? "border-red-500/60" : "border-white/12 focus:border-white/30"}`}
+                className={`w-full bg-neutral-50 border text-neutral-900 placeholder-neutral-300 text-sm px-4 py-3 rounded-xl focus:outline-none transition-colors ${error ? "border-red-400" : "border-neutral-200 focus:border-neutral-400"}`}
               />
               {error && (
-                <p id="auth-email-error" role="alert" className="flex items-center gap-1.5 text-red-400 text-xs mt-1.5">
+                <p id="auth-email-error" role="alert" className="flex items-center gap-1.5 text-red-500 text-xs mt-1.5">
                   <AlertCircle className="w-3 h-3 flex-shrink-0" />{error}
                 </p>
               )}
             </div>
             <button
               type="submit"
-              className="w-full bg-white text-black font-semibold py-3 rounded-xl text-sm cursor-pointer hover:bg-white/90 transition-colors"
+              className="w-full bg-neutral-900 text-white font-semibold py-3 rounded-full text-sm cursor-pointer hover:bg-neutral-700 transition-colors"
             >
               Continue with Email
             </button>
           </form>
 
-          <p className="text-[#333] text-xs text-center">
+          <p className="text-neutral-400 text-xs text-center">
             Already have an account?{" "}
-            <Link href="/auth/login" className="text-[#555] hover:text-white cursor-pointer transition-colors">
+            <Link href="/auth/login" className="text-neutral-700 hover:text-neutral-900 cursor-pointer transition-colors">
               Sign in
             </Link>
           </p>
 
-          <p className="text-[#222] text-xs text-center mt-3">
+          <p className="text-neutral-300 text-xs text-center mt-3">
             By continuing, you agree to our{" "}
-            <Link href="/terms" className="text-[#333] hover:text-white cursor-pointer transition-colors">Terms</Link>
+            <Link href="/terms" className="text-neutral-400 hover:text-neutral-700 cursor-pointer transition-colors">Terms</Link>
             {" & "}
-            <Link href="/privacy" className="text-[#333] hover:text-white cursor-pointer transition-colors">Privacy Policy</Link>
+            <Link href="/privacy" className="text-neutral-400 hover:text-neutral-700 cursor-pointer transition-colors">Privacy Policy</Link>
           </p>
         </div>
       </div>

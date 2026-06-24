@@ -24,41 +24,39 @@ const item = {
 
 export default function ReadyPage() {
   return (
-    <div className="min-h-screen bg-[#0c0c0c] flex flex-col items-center justify-center px-4 py-16">
+    <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4 py-16">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
         className="w-full max-w-sm text-center"
       >
-        {/* Success icon */}
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.2 }}
-          className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center mx-auto mb-8"
+          className="w-14 h-14 rounded-2xl bg-neutral-900 flex items-center justify-center mx-auto mb-8"
         >
-          <Zap className="w-6 h-6 text-black" fill="black" />
+          <Zap className="w-6 h-6 text-white" fill="white" />
         </motion.div>
 
-        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
+        <h1 className="text-2xl sm:text-3xl font-bold text-neutral-900 mb-2">
           Your Buildr Workspace<br />Is Ready.
         </h1>
-        <p className="text-[#444] text-sm mb-10">Everything is set up and personalized for you.</p>
+        <p className="text-neutral-400 text-sm mb-10">Everything is set up and personalized for you.</p>
 
-        {/* Feature list */}
         <motion.div
           variants={container}
           initial="hidden"
           animate="show"
-          className="text-left bg-[#0f0f0f] border border-white/6 rounded-xl p-5 mb-8 space-y-3"
+          className="text-left bg-neutral-50 border border-neutral-200 rounded-xl p-5 mb-8 space-y-3"
         >
           {features.map((feature) => (
             <motion.div key={feature} variants={item} className="flex items-center gap-3">
-              <div className="w-4 h-4 rounded bg-white/10 flex items-center justify-center flex-shrink-0">
-                <Check className="w-2.5 h-2.5 text-white/60" strokeWidth={2.5} />
+              <div className="w-4 h-4 rounded bg-neutral-200 flex items-center justify-center flex-shrink-0">
+                <Check className="w-2.5 h-2.5 text-neutral-600" strokeWidth={2.5} />
               </div>
-              <span className="text-white/70 text-sm">{feature}</span>
+              <span className="text-neutral-700 text-sm">{feature}</span>
             </motion.div>
           ))}
         </motion.div>
@@ -72,7 +70,7 @@ export default function ReadyPage() {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full bg-white text-black font-semibold py-3.5 rounded-xl text-sm cursor-pointer hover:bg-white/90 transition-colors"
+              className="w-full bg-neutral-900 text-white font-semibold py-3.5 rounded-full text-sm cursor-pointer hover:bg-neutral-700 transition-colors"
             >
               Enter Dashboard
             </motion.button>

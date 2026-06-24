@@ -18,10 +18,10 @@ export function MobileDashboardNav() {
 
   return (
     <>
-      <div className="lg:hidden flex items-center px-4 py-3 bg-[#0a0a0a] border-b border-white/6">
-        <span className="text-white font-semibold text-sm">Buildr</span>
+      <div className="lg:hidden flex items-center px-4 py-3 bg-white border-b border-neutral-100">
+        <span className="text-neutral-900 font-semibold text-sm">Buildr</span>
       </div>
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-[#0a0a0a] border-t border-white/6 z-40">
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-100 z-40">
         <div className="flex items-center justify-around px-2 py-2">
           {mobileNav.map((item) => {
             const Icon = item.icon;
@@ -32,7 +32,7 @@ export function MobileDashboardNav() {
                 href={item.href}
                 className={cn(
                   "flex flex-col items-center gap-1 px-3 py-1.5 rounded-lg cursor-pointer transition-colors",
-                  active ? "text-white" : "text-[#444] hover:text-[#888]"
+                  active ? "text-neutral-900" : "text-neutral-400 hover:text-neutral-700"
                 )}
               >
                 <Icon className="w-4 h-4" strokeWidth={active ? 2 : 1.5} />

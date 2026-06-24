@@ -27,7 +27,7 @@ const steps = [
 
 export function HowItWorksSection() {
   return (
-    <section id="how-it-works" className="py-28 bg-[#0a0a0a] border-t border-white/6">
+    <section id="how-it-works" className="py-28 bg-neutral-50 border-t border-neutral-100">
       <div className="max-w-5xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -36,15 +36,15 @@ export function HowItWorksSection() {
           transition={{ duration: 0.5 }}
           className="mb-16"
         >
-          <p className="text-[13px] font-medium tracking-widest uppercase text-white/30 mb-4">
+          <p className="text-xs uppercase tracking-[0.18em] text-neutral-400 font-medium mb-4">
             Simple process
           </p>
-          <h2 className="text-4xl sm:text-5xl font-bold text-white tracking-tight">
+          <h2 className="text-4xl sm:text-5xl font-bold text-neutral-900 tracking-tight">
             Up and running<br />in minutes
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           {steps.map((step, i) => (
             <motion.div
               key={step.number}
@@ -53,11 +53,11 @@ export function HowItWorksSection() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.08, duration: 0.4 }}
             >
-              <div className="text-[11px] font-mono text-white/20 mb-4 tracking-widest">
+              <div className="text-[11px] font-mono text-neutral-300 mb-4 tracking-widest">
                 0{step.number}
               </div>
-              <h3 className="text-white font-semibold text-base mb-2">{step.title}</h3>
-              <p className="text-[#555] text-sm leading-relaxed">{step.description}</p>
+              <h3 className="text-neutral-900 font-semibold text-base mb-2">{step.title}</h3>
+              <p className="text-neutral-500 text-sm leading-relaxed">{step.description}</p>
             </motion.div>
           ))}
         </div>

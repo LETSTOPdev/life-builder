@@ -79,7 +79,7 @@ export function PricingSection() {
   const [annual, setAnnual] = useState(false);
 
   return (
-    <section id="pricing" className="py-28 bg-[#0a0a0a] border-t border-white/6">
+    <section id="pricing" className="py-28 bg-neutral-50 border-t border-neutral-100">
       <div className="max-w-5xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
@@ -87,26 +87,30 @@ export function PricingSection() {
           viewport={{ once: true }}
           className="mb-12"
         >
-          <p className="text-[13px] font-medium tracking-widest uppercase text-white/30 mb-4">
+          <p className="text-xs uppercase tracking-[0.18em] text-neutral-400 font-medium mb-4">
             Pricing
           </p>
           <div className="flex items-end justify-between flex-wrap gap-4">
-            <h2 className="text-4xl sm:text-5xl font-bold text-white tracking-tight">
+            <h2 className="text-4xl sm:text-5xl font-bold text-neutral-900 tracking-tight">
               Simple, transparent<br />pricing
             </h2>
-            <div className="flex items-center gap-1 bg-[#111] border border-white/8 rounded-lg p-1">
+            <div className="flex items-center gap-1 bg-white border border-neutral-200 rounded-lg p-1">
               <button
                 onClick={() => setAnnual(false)}
-                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all cursor-pointer ${!annual ? "bg-white text-black" : "text-[#555] hover:text-white"}`}
+                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all cursor-pointer ${
+                  !annual ? "bg-neutral-900 text-white" : "text-neutral-400 hover:text-neutral-700"
+                }`}
               >
                 Monthly
               </button>
               <button
                 onClick={() => setAnnual(true)}
-                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all cursor-pointer flex items-center gap-1.5 ${annual ? "bg-white text-black" : "text-[#555] hover:text-white"}`}
+                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
+                  annual ? "bg-neutral-900 text-white" : "text-neutral-400 hover:text-neutral-700"
+                }`}
               >
                 Annual
-                <span className="text-[10px] bg-white/15 text-white/60 px-1.5 py-0.5 rounded font-medium">−20%</span>
+                <span className="text-[10px] bg-neutral-100 text-neutral-500 px-1.5 py-0.5 rounded font-medium">−20%</span>
               </button>
             </div>
           </div>
@@ -120,20 +124,20 @@ export function PricingSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.07, duration: 0.4 }}
-              className={`relative rounded-xl p-5 border flex flex-col ${
+              className={`relative rounded-2xl p-5 border flex flex-col ${
                 plan.highlight
-                  ? "bg-white text-black border-white"
-                  : "bg-[#0f0f0f] border-white/8 text-white"
+                  ? "bg-neutral-900 text-white border-neutral-900"
+                  : "bg-white border-neutral-200 text-neutral-900"
               }`}
             >
               {plan.badge && (
-                <span className="absolute -top-2.5 left-4 text-[10px] font-semibold bg-black text-white px-2 py-0.5 rounded-full border border-white/12">
+                <span className="absolute -top-2.5 left-4 text-[10px] font-semibold bg-neutral-900 text-white px-2 py-0.5 rounded-full">
                   {plan.badge}
                 </span>
               )}
 
               <div className="mb-5">
-                <div className={`text-xs font-medium mb-1 ${plan.highlight ? "text-black/50" : "text-[#444]"}`}>
+                <div className={`text-xs font-medium mb-1 ${plan.highlight ? "text-neutral-400" : "text-neutral-400"}`}>
                   {plan.name}
                 </div>
                 <div className="flex items-baseline gap-1 mb-1">
@@ -141,10 +145,10 @@ export function PricingSection() {
                     ${annual ? plan.annualPrice : plan.monthlyPrice}
                   </span>
                   {plan.monthlyPrice > 0 && (
-                    <span className={`text-sm ${plan.highlight ? "text-black/50" : "text-[#444]"}`}>/mo</span>
+                    <span className={`text-sm ${plan.highlight ? "text-neutral-400" : "text-neutral-400"}`}>/mo</span>
                   )}
                 </div>
-                <p className={`text-xs ${plan.highlight ? "text-black/50" : "text-[#444]"}`}>
+                <p className={`text-xs ${plan.highlight ? "text-neutral-400" : "text-neutral-500"}`}>
                   {plan.description}
                 </p>
               </div>
@@ -152,18 +156,18 @@ export function PricingSection() {
               <ul className="space-y-2.5 mb-6 flex-1">
                 {plan.features.map((feature) => (
                   <li key={feature} className="flex items-center gap-2">
-                    <Check className={`w-3.5 h-3.5 flex-shrink-0 ${plan.highlight ? "text-black/50" : "text-[#444]"}`} />
-                    <span className={`text-xs ${plan.highlight ? "text-black/80" : "text-[#888]"}`}>{feature}</span>
+                    <Check className={`w-3.5 h-3.5 flex-shrink-0 ${plan.highlight ? "text-neutral-400" : "text-neutral-400"}`} />
+                    <span className={`text-xs ${plan.highlight ? "text-neutral-300" : "text-neutral-600"}`}>{feature}</span>
                   </li>
                 ))}
               </ul>
 
               <Link
                 href={plan.href}
-                className={`w-full text-sm font-medium py-2 rounded-lg cursor-pointer transition-colors inline-flex items-center justify-center ${
+                className={`w-full text-sm font-medium py-2.5 rounded-full cursor-pointer transition-colors inline-flex items-center justify-center ${
                   plan.highlight
-                    ? "bg-black text-white hover:bg-black/80"
-                    : "bg-white/8 text-white hover:bg-white/12 border border-white/8"
+                    ? "bg-white text-neutral-900 hover:bg-neutral-100"
+                    : "bg-neutral-900 text-white hover:bg-neutral-700"
                 }`}
               >
                 {plan.cta}
@@ -172,7 +176,7 @@ export function PricingSection() {
           ))}
         </div>
 
-        <p className="text-[#333] text-xs mt-6">
+        <p className="text-neutral-400 text-xs mt-6">
           14-day free trial on all paid plans. No credit card required to start.
         </p>
       </div>

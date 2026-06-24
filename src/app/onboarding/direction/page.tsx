@@ -25,11 +25,11 @@ export default function DirectionPage() {
 
   return (
     <OnboardingShell step={1} totalSteps={5}>
-      <p className="text-[#666] text-xs font-medium tracking-widest uppercase mb-6">Life Direction</p>
-      <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
+      <p className="text-neutral-400 text-xs font-medium tracking-widest uppercase mb-6">Life Direction</p>
+      <h2 className="text-2xl sm:text-3xl font-bold text-neutral-900 mb-2">
         What are you trying<br />to achieve right now?
       </h2>
-      <p className="text-[#666] text-sm mb-8">Select all that apply.</p>
+      <p className="text-neutral-500 text-sm mb-8">Select all that apply.</p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-8">
         {options.map((opt) => (
@@ -48,8 +48,8 @@ export default function DirectionPage() {
         disabled={data.directions.length === 0}
         className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-semibold cursor-pointer transition-all group ${
           data.directions.length > 0
-            ? "bg-white text-black hover:bg-white/90"
-            : "bg-white/5 text-white/20 cursor-not-allowed"
+            ? "bg-neutral-900 text-white hover:bg-neutral-700"
+            : "bg-neutral-100 text-neutral-300 cursor-not-allowed"
         }`}
       >
         Continue

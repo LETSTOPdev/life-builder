@@ -15,25 +15,23 @@ export function OnboardingShell({ step, totalSteps, children, showProgress = tru
   const progress = (step / totalSteps) * 100;
 
   return (
-    <div className="min-h-screen bg-[#0c0c0c] flex flex-col">
-      {/* Top bar */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-white/8">
+    <div className="min-h-screen bg-white flex flex-col">
+      <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-100">
         <Link href="/" className="flex items-center gap-2 cursor-pointer">
-          <div className="w-6 h-6 rounded bg-white flex items-center justify-center">
-            <Zap className="w-3 h-3 text-black" fill="black" />
+          <div className="w-6 h-6 rounded bg-neutral-900 flex items-center justify-center">
+            <Zap className="w-3 h-3 text-white" fill="white" />
           </div>
-          <span className="text-white font-semibold text-sm">Buildr</span>
+          <span className="text-neutral-900 font-semibold text-sm">Buildr</span>
         </Link>
         {showProgress && (
-          <span className="text-[#555] text-xs font-medium">{step} / {totalSteps}</span>
+          <span className="text-neutral-400 text-xs font-medium">{step} / {totalSteps}</span>
         )}
       </div>
 
-      {/* Progress bar */}
       {showProgress && (
-        <div className="h-[2px] bg-white/8 relative">
+        <div className="h-[2px] bg-neutral-100 relative">
           <motion.div
-            className="absolute inset-y-0 left-0 bg-white"
+            className="absolute inset-y-0 left-0 bg-neutral-900"
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
             transition={{ duration: 0.4, ease: "easeOut" }}
@@ -41,7 +39,6 @@ export function OnboardingShell({ step, totalSteps, children, showProgress = tru
         </div>
       )}
 
-      {/* Content */}
       <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
         <div className="w-full max-w-lg">
           {children}

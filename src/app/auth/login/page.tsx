@@ -44,9 +44,9 @@ export default function LoginPage() {
   const field = (id: string, label: string, type: string, placeholder: string, key: "email" | "password") => (
     <div>
       <div className="flex items-center justify-between mb-1.5">
-        <label htmlFor={id} className="text-[#888] text-xs font-medium uppercase tracking-wide">{label}</label>
+        <label htmlFor={id} className="text-neutral-500 text-xs font-medium uppercase tracking-wide">{label}</label>
         {key === "password" && (
-          <Link href="/auth/forgot-password" className="text-[#555] hover:text-white text-xs cursor-pointer transition-colors">
+          <Link href="/auth/forgot-password" className="text-neutral-400 hover:text-neutral-700 text-xs cursor-pointer transition-colors">
             Forgot password?
           </Link>
         )}
@@ -61,8 +61,8 @@ export default function LoginPage() {
           autoComplete={key === "email" ? "email" : "current-password"}
           aria-invalid={!!errors[key]}
           aria-describedby={errors[key] ? `${id}-error` : undefined}
-          className={`w-full bg-[#161616] border text-white placeholder-[#333] text-sm px-4 py-3 rounded-xl focus:outline-none transition-colors ${
-            errors[key] ? "border-red-500/60 focus:border-red-500/80" : "border-white/12 focus:border-white/30"
+          className={`w-full bg-neutral-50 border text-neutral-900 placeholder-neutral-300 text-sm px-4 py-3 rounded-xl focus:outline-none transition-colors ${
+            errors[key] ? "border-red-400 focus:border-red-500" : "border-neutral-200 focus:border-neutral-400"
           } ${key === "password" ? "pr-11" : ""}`}
         />
         {key === "password" && (
@@ -70,14 +70,14 @@ export default function LoginPage() {
             type="button"
             onClick={() => setShow(s => !s)}
             aria-label={show ? "Hide password" : "Show password"}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-[#444] hover:text-white cursor-pointer transition-colors p-1"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700 cursor-pointer transition-colors p-1"
           >
             {show ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
           </button>
         )}
       </div>
       {errors[key] && (
-        <p id={`${id}-error`} role="alert" className="flex items-center gap-1.5 text-red-400 text-xs mt-1.5">
+        <p id={`${id}-error`} role="alert" className="flex items-center gap-1.5 text-red-500 text-xs mt-1.5">
           <AlertCircle className="w-3 h-3 flex-shrink-0" />
           {errors[key]}
         </p>
@@ -86,22 +86,21 @@ export default function LoginPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#0c0c0c] flex flex-col">
-      <div className="px-6 py-4 border-b border-white/8">
+    <div className="min-h-screen bg-white flex flex-col">
+      <div className="px-6 py-4 border-b border-neutral-100">
         <Link href="/" className="flex items-center gap-2 cursor-pointer w-fit">
-          <div className="w-6 h-6 rounded bg-white flex items-center justify-center">
-            <Zap className="w-3 h-3 text-black" fill="black" />
+          <div className="w-6 h-6 rounded bg-neutral-900 flex items-center justify-center">
+            <Zap className="w-3 h-3 text-white" fill="white" />
           </div>
-          <span className="text-white font-semibold text-sm">Buildr</span>
+          <span className="text-neutral-900 font-semibold text-sm">Buildr</span>
         </Link>
       </div>
 
       <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
         <div className="w-full max-w-sm">
-          <h1 className="text-2xl font-bold text-white mb-1">Welcome back</h1>
-          <p className="text-[#555] text-sm mb-8">Sign in to continue building.</p>
+          <h1 className="text-2xl font-bold text-neutral-900 mb-1">Welcome back</h1>
+          <p className="text-neutral-500 text-sm mb-8">Sign in to continue building.</p>
 
-          {/* OAuth */}
           <div className="space-y-2 mb-6">
             {[
               {
@@ -125,7 +124,7 @@ export default function LoginPage() {
               },
             ].map(({ label, icon }) => (
               <Link key={label} href="/onboarding">
-                <button className="w-full flex items-center gap-3 px-4 py-3 bg-[#161616] border border-white/12 rounded-xl text-sm text-white/70 hover:text-white hover:border-white/25 cursor-pointer transition-all">
+                <button className="w-full flex items-center gap-3 px-4 py-3 bg-neutral-50 border border-neutral-200 rounded-xl text-sm text-neutral-500 hover:text-neutral-900 hover:border-neutral-400 cursor-pointer transition-all">
                   {icon}
                   <span>{label}</span>
                 </button>
@@ -134,13 +133,13 @@ export default function LoginPage() {
           </div>
 
           <div className="flex items-center gap-3 mb-6">
-            <div className="flex-1 h-px bg-white/8" />
-            <span className="text-[#333] text-xs">or</span>
-            <div className="flex-1 h-px bg-white/8" />
+            <div className="flex-1 h-px bg-neutral-200" />
+            <span className="text-neutral-400 text-xs">or</span>
+            <div className="flex-1 h-px bg-neutral-200" />
           </div>
 
           {errors.general && (
-            <div role="alert" className="flex items-center gap-2 bg-red-950/30 border border-red-500/30 text-red-400 text-sm px-4 py-3 rounded-xl mb-4">
+            <div role="alert" className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 rounded-xl mb-4">
               <AlertCircle className="w-4 h-4 flex-shrink-0" />
               {errors.general}
             </div>
@@ -153,20 +152,20 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-white text-black font-semibold py-3 rounded-xl text-sm cursor-pointer hover:bg-white/90 transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full bg-neutral-900 text-white font-semibold py-3 rounded-full text-sm cursor-pointer hover:bg-neutral-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>
-                  <span className="w-4 h-4 border-2 border-black/20 border-t-black rounded-full animate-spin" />
+                  <span className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
                   Signing in...
                 </>
               ) : "Sign in"}
             </button>
           </form>
 
-          <p className="text-center text-[#444] text-xs mt-6">
+          <p className="text-center text-neutral-400 text-xs mt-6">
             Don&apos;t have an account?{" "}
-            <Link href="/auth" className="text-white hover:text-white/80 cursor-pointer transition-colors">
+            <Link href="/auth" className="text-neutral-700 hover:text-neutral-900 cursor-pointer transition-colors">
               Start free
             </Link>
           </p>

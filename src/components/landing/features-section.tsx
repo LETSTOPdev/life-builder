@@ -48,7 +48,7 @@ const features = [
 
 export function FeaturesSection() {
   return (
-    <section id="features" className="py-28 bg-[#0a0a0a]">
+    <section id="features" className="py-28 bg-white border-t border-neutral-100">
       <div className="max-w-5xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -57,15 +57,15 @@ export function FeaturesSection() {
           transition={{ duration: 0.5 }}
           className="mb-16"
         >
-          <p className="text-[13px] font-medium tracking-widest uppercase text-white/30 mb-4">
+          <p className="text-xs uppercase tracking-[0.18em] text-neutral-400 font-medium mb-4">
             Everything you need
           </p>
-          <h2 className="text-4xl sm:text-5xl font-bold text-white leading-tight tracking-tight max-w-xl">
+          <h2 className="text-4xl sm:text-5xl font-bold text-neutral-900 leading-tight tracking-tight max-w-xl">
             Your complete life<br />operating system
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-white/6 border border-white/6 rounded-xl overflow-hidden">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-neutral-100 border border-neutral-100 rounded-2xl overflow-hidden">
           {features.map((feature, i) => {
             const Icon = feature.icon;
             return (
@@ -75,11 +75,11 @@ export function FeaturesSection() {
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.05, duration: 0.4 }}
-                className="bg-[#0a0a0a] p-6 hover:bg-[#111] transition-colors duration-200 cursor-default"
+                className="bg-white p-6 hover:bg-neutral-50 transition-colors duration-200 cursor-default"
               >
-                <Icon className="w-4 h-4 text-white/40 mb-4" strokeWidth={1.5} />
-                <h3 className="text-white font-medium text-sm mb-2">{feature.title}</h3>
-                <p className="text-[#555] text-sm leading-relaxed">{feature.description}</p>
+                <Icon className="w-4 h-4 text-neutral-400 mb-4" strokeWidth={1.5} />
+                <h3 className="text-neutral-900 font-semibold text-sm mb-2">{feature.title}</h3>
+                <p className="text-neutral-500 text-sm leading-relaxed">{feature.description}</p>
               </motion.div>
             );
           })}

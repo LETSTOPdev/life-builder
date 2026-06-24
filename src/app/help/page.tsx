@@ -48,20 +48,20 @@ export default function HelpPage() {
 
       <div className="space-y-4 mb-16">
         {faqs.map((faq) => (
-          <div key={faq.q} className="bg-[#161616] border border-white/10 rounded-xl p-5">
-            <h3 className="text-white font-medium text-sm mb-2">{faq.q}</h3>
-            <p className="text-[#777] text-sm leading-relaxed">{faq.a}</p>
+          <div key={faq.q} className="bg-neutral-50 border border-neutral-200 rounded-xl p-5">
+            <h3 className="text-neutral-900 font-medium text-sm mb-2">{faq.q}</h3>
+            <p className="text-neutral-500 text-sm leading-relaxed">{faq.a}</p>
           </div>
         ))}
       </div>
 
-      <div className="bg-[#161616] border border-white/10 rounded-xl p-6 text-center">
-        <p className="text-white font-medium mb-1">Still need help?</p>
-        <p className="text-[#666] text-sm mb-4">Our team responds within 24 hours.</p>
-        <Link href="/contact" className="inline-flex items-center gap-2 bg-white text-black text-sm font-semibold px-5 py-2.5 rounded-xl cursor-pointer hover:bg-white/90 transition-colors group">
-            Contact Support
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-          </Link>
+      <div className="bg-neutral-50 border border-neutral-200 rounded-xl p-6 text-center">
+        <p className="text-neutral-900 font-medium mb-1">Still need help?</p>
+        <p className="text-neutral-500 text-sm mb-4">Our team responds within 24 hours.</p>
+        <Link href="/contact" className="inline-flex items-center gap-2 bg-neutral-900 text-white text-sm font-semibold px-5 py-2.5 rounded-full cursor-pointer hover:bg-neutral-700 transition-colors group">
+          Contact Support
+          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+        </Link>
       </div>
     </StaticShell>
   );

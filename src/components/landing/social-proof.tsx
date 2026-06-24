@@ -43,7 +43,7 @@ const stats = [
 
 export function SocialProofSection() {
   return (
-    <section className="py-28 bg-[#0a0a0a] border-t border-white/6">
+    <section className="py-28 bg-white border-t border-neutral-100">
       <div className="max-w-5xl mx-auto px-6">
         {/* Stats row */}
         <motion.div
@@ -54,8 +54,8 @@ export function SocialProofSection() {
         >
           {stats.map((stat) => (
             <div key={stat.label}>
-              <div className="text-3xl font-bold text-white mb-1">{stat.value}</div>
-              <div className="text-[#444] text-sm">{stat.label}</div>
+              <div className="text-3xl font-bold text-neutral-900 mb-1">{stat.value}</div>
+              <div className="text-neutral-400 text-sm">{stat.label}</div>
             </div>
           ))}
         </motion.div>
@@ -66,7 +66,7 @@ export function SocialProofSection() {
           viewport={{ once: true }}
           className="mb-12"
         >
-          <h2 className="text-4xl font-bold text-white tracking-tight max-w-2xl">
+          <h2 className="text-4xl font-bold text-neutral-900 tracking-tight max-w-2xl">
             Thousands are already building better careers, businesses, and lives.
           </h2>
         </motion.div>
@@ -79,19 +79,19 @@ export function SocialProofSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.07 }}
-              className="bg-[#0f0f0f] border border-white/6 rounded-xl p-6"
+              className="bg-neutral-50 border border-neutral-100 rounded-2xl p-6 hover:border-neutral-200 transition-colors"
             >
-              <blockquote className="text-[#888] text-sm leading-relaxed mb-5">
+              <blockquote className="text-neutral-600 text-sm leading-relaxed mb-5">
                 &ldquo;{t.quote}&rdquo;
               </blockquote>
               <div className="flex items-center gap-3">
                 <Avatar className="w-8 h-8">
                   <AvatarImage src={t.avatar} alt={t.name} />
-                  <AvatarFallback className="bg-[#1a1a1a] text-white text-xs">{t.initials}</AvatarFallback>
+                  <AvatarFallback className="bg-neutral-200 text-neutral-600 text-xs">{t.initials}</AvatarFallback>
                 </Avatar>
                 <div>
-                  <div className="text-white text-sm font-medium">{t.name}</div>
-                  <div className="text-[#444] text-xs">{t.role}</div>
+                  <div className="text-neutral-900 text-sm font-medium">{t.name}</div>
+                  <div className="text-neutral-400 text-xs">{t.role}</div>
                 </div>
               </div>
             </motion.div>

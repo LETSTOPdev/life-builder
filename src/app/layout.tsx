@@ -42,10 +42,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${plusJakartaSans.variable} dark scroll-smooth`}>
-      <body className="font-sans antialiased bg-black text-white min-h-screen">
+    <html lang="en" className={`${plusJakartaSans.variable} scroll-smooth`}>
+      <body className="font-sans antialiased bg-white text-neutral-900 min-h-screen">
         {children}
-        <Toaster position="bottom-right" theme="dark" />
+        <Toaster position="bottom-right" theme="light" />
       </body>
     </html>
   );

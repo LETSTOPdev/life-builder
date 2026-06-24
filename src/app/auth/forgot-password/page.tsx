@@ -17,13 +17,13 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0c0c0c] flex flex-col">
-      <div className="px-6 py-4 border-b border-white/8">
+    <div className="min-h-screen bg-white flex flex-col">
+      <div className="px-6 py-4 border-b border-neutral-100">
         <Link href="/" className="flex items-center gap-2 cursor-pointer w-fit">
-          <div className="w-6 h-6 rounded bg-white flex items-center justify-center">
-            <Zap className="w-3 h-3 text-black" fill="black" />
+          <div className="w-6 h-6 rounded bg-neutral-900 flex items-center justify-center">
+            <Zap className="w-3 h-3 text-white" fill="white" />
           </div>
-          <span className="text-white font-semibold text-sm">Buildr</span>
+          <span className="text-neutral-900 font-semibold text-sm">Buildr</span>
         </Link>
       </div>
 
@@ -36,13 +36,13 @@ export default function ForgotPasswordPage() {
         >
           {!sent ? (
             <>
-              <Link href="/auth" className="inline-flex items-center gap-1.5 text-[#555] hover:text-white text-xs mb-8 cursor-pointer transition-colors group">
+              <Link href="/auth" className="inline-flex items-center gap-1.5 text-neutral-400 hover:text-neutral-700 text-xs mb-8 cursor-pointer transition-colors group">
                 <ArrowLeft className="w-3 h-3 group-hover:-translate-x-0.5 transition-transform" />
                 Back to sign in
               </Link>
 
-              <h1 className="text-2xl font-bold text-white mb-2">Reset your password</h1>
-              <p className="text-[#555] text-sm mb-8">Enter your email and we&apos;ll send a reset link.</p>
+              <h1 className="text-2xl font-bold text-neutral-900 mb-2">Reset your password</h1>
+              <p className="text-neutral-500 text-sm mb-8">Enter your email and we&apos;ll send a reset link.</p>
 
               <form onSubmit={handleSubmit} className="space-y-3">
                 <input
@@ -51,12 +51,12 @@ export default function ForgotPasswordPage() {
                   placeholder="you@example.com"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  className="w-full bg-[#161616] border border-white/12 text-white placeholder-[#333] text-sm px-4 py-3 rounded-xl focus:outline-none focus:border-white/30 transition-colors"
+                  className="w-full bg-neutral-50 border border-neutral-200 text-neutral-900 placeholder-neutral-300 text-sm px-4 py-3 rounded-xl focus:outline-none focus:border-neutral-400 transition-colors"
                 />
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-white text-black font-semibold py-3 rounded-xl text-sm cursor-pointer hover:bg-white/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-neutral-900 text-white font-semibold py-3 rounded-full text-sm cursor-pointer hover:bg-neutral-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? "Sending..." : "Send Reset Link"}
                 </button>
@@ -64,16 +64,16 @@ export default function ForgotPasswordPage() {
             </>
           ) : (
             <div className="text-center">
-              <div className="w-12 h-12 rounded-full bg-white/8 border border-white/12 flex items-center justify-center mx-auto mb-6">
-                <CheckCircle2 className="w-6 h-6 text-white/60" />
+              <div className="w-12 h-12 rounded-full bg-neutral-100 border border-neutral-200 flex items-center justify-center mx-auto mb-6">
+                <CheckCircle2 className="w-6 h-6 text-neutral-500" />
               </div>
-              <h2 className="text-xl font-bold text-white mb-2">Check your email</h2>
-              <p className="text-[#666] text-sm mb-6">
-                We sent a reset link to <span className="text-white">{email}</span>
+              <h2 className="text-xl font-bold text-neutral-900 mb-2">Check your email</h2>
+              <p className="text-neutral-500 text-sm mb-6">
+                We sent a reset link to <span className="text-neutral-900">{email}</span>
               </p>
-              <Link href="/auth" className="text-[#555] hover:text-white text-sm cursor-pointer transition-colors">
-                  Back to sign in
-                </Link>
+              <Link href="/auth" className="text-neutral-400 hover:text-neutral-700 text-sm cursor-pointer transition-colors">
+                Back to sign in
+              </Link>
             </div>
           )}
         </motion.div>

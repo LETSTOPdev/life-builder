@@ -27,11 +27,11 @@ export default function SuccessPage() {
 
   return (
     <OnboardingShell step={5} totalSteps={5}>
-      <p className="text-[#666] text-xs font-medium tracking-widest uppercase mb-6">Success Goal</p>
-      <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
+      <p className="text-neutral-400 text-xs font-medium tracking-widest uppercase mb-6">Success Goal</p>
+      <h2 className="text-2xl sm:text-3xl font-bold text-neutral-900 mb-2">
         What would make the<br />next 12 months a success?
       </h2>
-      <p className="text-[#666] text-sm mb-8">Pick the one that resonates most.</p>
+      <p className="text-neutral-500 text-sm mb-8">Pick the one that resonates most.</p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
         {presets.map((opt) => (
@@ -48,7 +48,6 @@ export default function SuccessPage() {
         ))}
       </div>
 
-      {/* Custom option */}
       <div className="mb-8">
         {!custom ? (
           <button
@@ -56,7 +55,7 @@ export default function SuccessPage() {
               setCustom(true);
               setField("successGoal", "");
             }}
-            className="w-full text-left px-4 py-3 rounded-xl border border-dashed border-white/10 text-[#444] text-sm hover:border-white/25 hover:text-white cursor-pointer transition-all"
+            className="w-full text-left px-4 py-3 rounded-xl border border-dashed border-neutral-200 text-neutral-400 text-sm hover:border-neutral-400 hover:text-neutral-700 cursor-pointer transition-all"
           >
             Write my own...
           </button>
@@ -67,11 +66,11 @@ export default function SuccessPage() {
               placeholder="What does success look like for you?"
               value={data.customGoal}
               onChange={e => setField("customGoal", e.target.value)}
-              className="w-full bg-[#0f0f0f] border border-white/20 text-white placeholder-[#333] text-sm px-4 py-3 rounded-xl focus:outline-none focus:border-white/40"
+              className="w-full bg-neutral-50 border border-neutral-300 text-neutral-900 placeholder-neutral-300 text-sm px-4 py-3 rounded-xl focus:outline-none focus:border-neutral-500 transition-colors"
             />
             <button
               onClick={() => { setCustom(false); setField("customGoal", ""); }}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#333] hover:text-white text-xs cursor-pointer"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700 text-xs cursor-pointer"
             >
               ✕
             </button>
@@ -82,10 +81,10 @@ export default function SuccessPage() {
       <button
         onClick={() => hasSelection && router.push("/onboarding/analyzing")}
         disabled={!hasSelection}
-        className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-semibold cursor-pointer transition-all group ${
+        className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-full text-sm font-semibold cursor-pointer transition-all group ${
           hasSelection
-            ? "bg-white text-black hover:bg-white/90"
-            : "bg-white/5 text-white/20 cursor-not-allowed"
+            ? "bg-neutral-900 text-white hover:bg-neutral-700"
+            : "bg-neutral-100 text-neutral-300 cursor-not-allowed"
         }`}
       >
         Build My Plan

@@ -82,99 +82,95 @@ export default function UpgradePage() {
   const [annual, setAnnual] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#0c0c0c]">
-      {/* Nav */}
-      <div className="px-6 py-4 border-b border-white/8 flex items-center justify-between">
+    <div className="min-h-screen bg-white text-neutral-900">
+      <div className="px-6 py-4 border-b border-neutral-100 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 cursor-pointer">
-          <div className="w-6 h-6 rounded bg-white flex items-center justify-center">
-            <Zap className="w-3 h-3 text-black" fill="black" />
+          <div className="w-6 h-6 rounded bg-neutral-900 flex items-center justify-center">
+            <Zap className="w-3 h-3 text-white" fill="white" />
           </div>
-          <span className="text-white font-semibold text-sm">Buildr</span>
+          <span className="text-neutral-900 font-semibold text-sm">Buildr</span>
         </Link>
-        <Link href="/" className="text-[#555] hover:text-white text-sm cursor-pointer transition-colors">
+        <Link href="/" className="text-neutral-400 hover:text-neutral-700 text-sm cursor-pointer transition-colors">
           ← Back
         </Link>
       </div>
 
       <div className="max-w-5xl mx-auto px-6 py-20">
-        {/* Header */}
         <div className="text-center mb-14">
-          <p className="text-[#555] text-xs font-medium tracking-widest uppercase mb-4">Pricing</p>
-          <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4 tracking-tight leading-tight">
+          <p className="text-neutral-400 text-xs font-medium tracking-widest uppercase mb-4">Pricing</p>
+          <h1 className="text-4xl sm:text-5xl font-bold text-neutral-900 mb-4 tracking-tight leading-tight">
             Unlock Your Full AI<br />Life Operating System
           </h1>
-          <p className="text-[#555] text-base mb-8">Start free. Upgrade when you&apos;re ready.</p>
+          <p className="text-neutral-500 text-base mb-8">Start free. Upgrade when you&apos;re ready.</p>
 
-          {/* Toggle */}
-          <div className="inline-flex items-center gap-1 bg-[#161616] border border-white/12 rounded-full p-1">
+          <div className="inline-flex items-center gap-1 bg-neutral-100 border border-neutral-200 rounded-full p-1">
             <button
               onClick={() => setAnnual(false)}
-              className={`text-sm px-4 py-1.5 rounded-full transition-all cursor-pointer ${!annual ? "bg-white text-black font-medium" : "text-[#555] hover:text-white"}`}
+              className={`text-sm px-4 py-1.5 rounded-full transition-all cursor-pointer ${!annual ? "bg-neutral-900 text-white font-medium" : "text-neutral-500 hover:text-neutral-900"}`}
             >
               Monthly
             </button>
             <button
               onClick={() => setAnnual(true)}
-              className={`text-sm px-4 py-1.5 rounded-full transition-all cursor-pointer flex items-center gap-2 ${annual ? "bg-white text-black font-medium" : "text-[#555] hover:text-white"}`}
+              className={`text-sm px-4 py-1.5 rounded-full transition-all cursor-pointer flex items-center gap-2 ${annual ? "bg-neutral-900 text-white font-medium" : "text-neutral-500 hover:text-neutral-900"}`}
             >
               Annual
-              <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium transition-colors ${annual ? "bg-black/10 text-black/60" : "bg-white/8 text-[#666]"}`}>−20%</span>
+              <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium transition-colors ${annual ? "bg-white/20 text-white" : "bg-neutral-200 text-neutral-500"}`}>−20%</span>
             </button>
           </div>
         </div>
 
-        {/* Plans */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-20">
           {plans.map((plan) => (
             <div
               key={plan.name}
               className={`relative rounded-2xl border p-6 flex flex-col ${
                 plan.highlighted
-                  ? "bg-white border-white"
-                  : "bg-[#161616] border-white/12"
+                  ? "bg-neutral-900 border-neutral-900"
+                  : "bg-white border-neutral-200"
               }`}
             >
               {plan.badge && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                  <span className="bg-white text-black text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                  <span className="bg-neutral-900 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">
                     {plan.badge}
                   </span>
                 </div>
               )}
 
               <div className="mb-6">
-                <p className={`text-xs font-semibold uppercase tracking-widest mb-1 ${plan.highlighted ? "text-black/40" : "text-[#555]"}`}>
+                <p className={`text-xs font-semibold uppercase tracking-widest mb-1 ${plan.highlighted ? "text-white/50" : "text-neutral-400"}`}>
                   {plan.name}
                 </p>
-                <div className={`text-3xl font-bold mb-1 ${plan.highlighted ? "text-black" : "text-white"}`}>
+                <div className={`text-3xl font-bold mb-1 ${plan.highlighted ? "text-white" : "text-neutral-900"}`}>
                   {plan.price[annual ? "annual" : "monthly"] === 0
                     ? "Free"
                     : `$${plan.price[annual ? "annual" : "monthly"]}`}
                   {plan.price.monthly > 0 && (
-                    <span className={`text-sm font-normal ml-1 ${plan.highlighted ? "text-black/40" : "text-[#444]"}`}>/mo</span>
+                    <span className={`text-sm font-normal ml-1 ${plan.highlighted ? "text-white/40" : "text-neutral-400"}`}>/mo</span>
                   )}
                 </div>
-                <p className={`text-xs ${plan.highlighted ? "text-black/50" : "text-[#555]"}`}>{plan.tagline}</p>
+                <p className={`text-xs ${plan.highlighted ? "text-white/50" : "text-neutral-500"}`}>{plan.tagline}</p>
               </div>
 
               <ul className="space-y-2.5 flex-1 mb-6">
                 {plan.features.map((feature) => (
                   <li key={feature} className="flex items-start gap-2">
                     <Check
-                      className={`w-3.5 h-3.5 mt-0.5 flex-shrink-0 ${plan.highlighted ? "text-black/60" : "text-white/40"}`}
+                      className={`w-3.5 h-3.5 mt-0.5 flex-shrink-0 ${plan.highlighted ? "text-white/60" : "text-neutral-400"}`}
                       strokeWidth={2.5}
                     />
-                    <span className={`text-sm ${plan.highlighted ? "text-black/70" : "text-[#888]"}`}>{feature}</span>
+                    <span className={`text-sm ${plan.highlighted ? "text-white/70" : "text-neutral-600"}`}>{feature}</span>
                   </li>
                 ))}
               </ul>
 
               <Link
                 href={plan.href}
-                className={`w-full py-2.5 rounded-xl text-sm font-semibold cursor-pointer transition-all inline-flex items-center justify-center ${
+                className={`w-full py-2.5 rounded-full text-sm font-semibold cursor-pointer transition-all inline-flex items-center justify-center ${
                   plan.highlighted
-                    ? "bg-black text-white hover:bg-black/80"
-                    : "bg-white/8 text-white hover:bg-white/15 border border-white/12"
+                    ? "bg-white text-neutral-900 hover:bg-neutral-100"
+                    : "bg-neutral-900 text-white hover:bg-neutral-700 border border-neutral-900"
                 }`}
               >
                 {plan.cta}
@@ -183,24 +179,23 @@ export default function UpgradePage() {
           ))}
         </div>
 
-        {/* FAQ */}
         <div className="max-w-2xl mx-auto">
-          <h2 className="text-white font-bold text-2xl mb-8 text-center">Frequently asked</h2>
+          <h2 className="text-neutral-900 font-bold text-2xl mb-8 text-center">Frequently asked</h2>
           <div className="space-y-3">
             {faqs.map((faq) => (
-              <div key={faq.q} className="bg-[#161616] border border-white/12 rounded-xl p-5">
-                <h3 className="text-white font-medium text-sm mb-2">{faq.q}</h3>
-                <p className="text-[#666] text-sm leading-relaxed">{faq.a}</p>
+              <div key={faq.q} className="bg-neutral-50 border border-neutral-200 rounded-xl p-5">
+                <h3 className="text-neutral-900 font-medium text-sm mb-2">{faq.q}</h3>
+                <p className="text-neutral-500 text-sm leading-relaxed">{faq.a}</p>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="text-center mt-16 pt-12 border-t border-white/8">
-          <p className="text-[#555] text-sm mb-3">Not sure which plan is right for you?</p>
+        <div className="text-center mt-16 pt-12 border-t border-neutral-100">
+          <p className="text-neutral-500 text-sm mb-3">Not sure which plan is right for you?</p>
           <Link
             href="/contact"
-            className="text-white text-sm underline underline-offset-4 hover:text-white/70 cursor-pointer transition-colors"
+            className="text-neutral-900 text-sm underline underline-offset-4 hover:text-neutral-500 cursor-pointer transition-colors"
           >
             Talk to us →
           </Link>

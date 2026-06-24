@@ -17,16 +17,16 @@ export function ChoiceCard({ label, selected, onClick, multi = false }: ChoiceCa
       whileTap={{ scale: 0.98 }}
       className={`w-full text-left px-4 py-3 rounded-xl border text-sm cursor-pointer transition-all duration-150 flex items-center justify-between group ${
         selected
-          ? "bg-white text-black border-white"
-          : "bg-[#161616] text-[#bbb] border-white/18 hover:border-white/40 hover:text-white hover:bg-[#1c1c1c]"
+          ? "bg-neutral-900 text-white border-neutral-900"
+          : "bg-white text-neutral-600 border-neutral-200 hover:border-neutral-400 hover:text-neutral-900 hover:bg-neutral-50"
       }`}
     >
       <span className={selected ? "font-medium" : ""}>{label}</span>
       {multi && (
         <div className={`w-4 h-4 rounded flex items-center justify-center border flex-shrink-0 transition-all ${
-          selected ? "bg-black border-black" : "border-white/20 group-hover:border-white/40"
+          selected ? "bg-white border-white" : "border-neutral-300 group-hover:border-neutral-500"
         }`}>
-          {selected && <Check className="w-2.5 h-2.5 text-white" />}
+          {selected && <Check className="w-2.5 h-2.5 text-neutral-900" />}
         </div>
       )}
     </motion.button>

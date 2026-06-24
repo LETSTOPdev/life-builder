@@ -81,9 +81,9 @@ export default function SettingsPage() {
       role="switch"
       aria-checked={checked}
       onClick={onChange}
-      className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors cursor-pointer ${checked ? "bg-white" : "bg-white/15"}`}
+      className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors cursor-pointer ${checked ? "bg-neutral-900" : "bg-neutral-200"}`}
     >
-      <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-black transition-transform ${checked ? "translate-x-4" : "translate-x-0.5"}`} />
+      <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${checked ? "translate-x-4" : "translate-x-0.5"}`} />
     </button>
   );
 
@@ -91,7 +91,7 @@ export default function SettingsPage() {
     <button
       onClick={onClick}
       disabled={saving}
-      className="flex items-center gap-2 bg-white text-black text-xs font-medium px-4 py-2 rounded-lg hover:bg-white/90 transition-colors cursor-pointer disabled:opacity-50"
+      className="flex items-center gap-2 bg-neutral-900 text-white text-xs font-medium px-4 py-2 rounded-full hover:bg-neutral-700 transition-colors cursor-pointer disabled:opacity-50"
     >
       {saved ? <><Check className="w-3.5 h-3.5" /> Saved</> : saving ? "Saving…" : "Save changes"}
     </button>
@@ -102,8 +102,8 @@ export default function SettingsPage() {
   if (loading) {
     return (
       <div className="p-6 max-w-2xl mx-auto">
-        <h1 className="text-2xl font-bold text-white mb-6">Settings</h1>
-        <div className="bg-[#161616] border border-white/12 rounded-xl p-6 animate-pulse h-48" />
+        <h1 className="text-2xl font-bold text-neutral-900 mb-6">Settings</h1>
+        <div className="bg-white border border-neutral-200 rounded-xl p-6 animate-pulse h-48" />
       </div>
     );
   }
@@ -111,16 +111,16 @@ export default function SettingsPage() {
   return (
     <div className="p-6 pb-24 lg:pb-6 max-w-2xl mx-auto">
       <div className="mb-6 pt-2">
-        <h1 className="text-2xl font-bold text-white">Settings</h1>
-        <p className="text-[#555] text-sm mt-1">Manage your account and preferences</p>
+        <h1 className="text-2xl font-bold text-neutral-900">Settings</h1>
+        <p className="text-neutral-500 text-sm mt-1">Manage your account and preferences</p>
       </div>
 
-      <div className="flex gap-1 bg-[#161616] border border-white/12 rounded-lg p-1 mb-6 overflow-x-auto">
+      <div className="flex gap-1 bg-neutral-100 border border-neutral-200 rounded-lg p-1 mb-6 overflow-x-auto">
         {tabs.map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium capitalize cursor-pointer transition-all whitespace-nowrap ${activeTab === tab ? "bg-white text-black" : "text-[#555] hover:text-white"}`}
+            className={`px-3 py-1.5 rounded-md text-xs font-medium capitalize cursor-pointer transition-all whitespace-nowrap ${activeTab === tab ? "bg-white text-neutral-900 shadow-sm" : "text-neutral-500 hover:text-neutral-900"}`}
           >
             {tab}
           </button>
@@ -129,16 +129,16 @@ export default function SettingsPage() {
 
       {activeTab === "profile" && profile && (
         <div className="space-y-5">
-          <div className="bg-[#161616] border border-white/12 rounded-xl p-5">
-            <h2 className="text-white font-medium text-sm mb-5">Profile</h2>
+          <div className="bg-white border border-neutral-200 rounded-xl p-5">
+            <h2 className="text-neutral-900 font-medium text-sm mb-5">Profile</h2>
             <div className="flex items-center gap-4 mb-5">
-              <div className="w-12 h-12 rounded-full bg-[#222] border border-white/15 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
+              <div className="w-12 h-12 rounded-full bg-neutral-200 border border-neutral-300 flex items-center justify-center text-neutral-700 text-sm font-bold flex-shrink-0">
                 {initials}
               </div>
               <div>
-                <p className="text-white text-sm font-medium">{profile.name}</p>
-                <p className="text-[#444] text-xs">{profile.email}</p>
-                <span className="text-[10px] text-[#444] border border-white/10 px-2 py-0.5 rounded mt-1 inline-block capitalize">{profile.plan}</span>
+                <p className="text-neutral-900 text-sm font-medium">{profile.name}</p>
+                <p className="text-neutral-400 text-xs">{profile.email}</p>
+                <span className="text-[10px] text-neutral-500 border border-neutral-200 px-2 py-0.5 rounded mt-1 inline-block capitalize">{profile.plan}</span>
               </div>
             </div>
             <div className="space-y-4">
@@ -147,24 +147,24 @@ export default function SettingsPage() {
                 { label: "Timezone", key: "timezone", type: "text", placeholder: "UTC-5 (New York)" },
               ].map(({ label, key, type, placeholder }) => (
                 <div key={key}>
-                  <label className="text-[#555] text-xs block mb-1.5">{label}</label>
+                  <label className="text-neutral-500 text-xs block mb-1.5">{label}</label>
                   <input
                     type={type}
                     value={(profile as unknown as Record<string, string>)[key] ?? ""}
                     onChange={(e) => setProfile((p) => p ? { ...p, [key]: e.target.value } : p)}
                     placeholder={placeholder}
-                    className="w-full bg-[#0c0c0c] border border-white/12 rounded-lg px-3 py-2.5 text-white text-sm placeholder:text-[#333] focus:outline-none focus:border-white/30 transition-colors"
+                    className="w-full bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2.5 text-neutral-900 text-sm placeholder:text-neutral-300 focus:outline-none focus:border-neutral-400 transition-colors"
                   />
                 </div>
               ))}
               <div>
-                <label className="text-[#555] text-xs block mb-1.5">Bio</label>
+                <label className="text-neutral-500 text-xs block mb-1.5">Bio</label>
                 <textarea
                   rows={3}
                   value={profile.bio}
                   onChange={(e) => setProfile((p) => p ? { ...p, bio: e.target.value } : p)}
                   placeholder="Tell us about yourself"
-                  className="w-full bg-[#0c0c0c] border border-white/12 rounded-lg px-3 py-2.5 text-white text-sm placeholder:text-[#333] focus:outline-none focus:border-white/30 transition-colors resize-none"
+                  className="w-full bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2.5 text-neutral-900 text-sm placeholder:text-neutral-300 focus:outline-none focus:border-neutral-400 transition-colors resize-none"
                 />
               </div>
             </div>
@@ -176,8 +176,8 @@ export default function SettingsPage() {
       )}
 
       {activeTab === "notifications" && (
-        <div className="bg-[#161616] border border-white/12 rounded-xl p-5">
-          <h2 className="text-white font-medium text-sm mb-5">Notifications</h2>
+        <div className="bg-white border border-neutral-200 rounded-xl p-5">
+          <h2 className="text-neutral-900 font-medium text-sm mb-5">Notifications</h2>
           <div className="space-y-4">
             {(Object.entries(notifications) as [keyof Notifications, boolean][]).map(([key, val]) => {
               const labels: Record<string, string> = {
@@ -196,8 +196,8 @@ export default function SettingsPage() {
               return (
                 <div key={key} className="flex items-center justify-between py-1">
                   <div>
-                    <p className="text-white text-sm">{labels[key]}</p>
-                    <p className="text-[#444] text-xs mt-0.5">{descs[key]}</p>
+                    <p className="text-neutral-900 text-sm">{labels[key]}</p>
+                    <p className="text-neutral-400 text-xs mt-0.5">{descs[key]}</p>
                   </div>
                   <Toggle checked={val} onChange={() => setNotifications((n) => ({ ...n, [key]: !n[key] }))} />
                 </div>
@@ -211,12 +211,12 @@ export default function SettingsPage() {
       )}
 
       {activeTab === "subscription" && (
-        <div className="bg-[#161616] border border-white/12 rounded-xl p-5">
-          <h2 className="text-white font-medium text-sm mb-2">Subscription</h2>
-          <p className="text-[#444] text-xs mb-5">Current plan: <span className="text-white capitalize">{profile?.plan ?? "free"}</span></p>
+        <div className="bg-white border border-neutral-200 rounded-xl p-5">
+          <h2 className="text-neutral-900 font-medium text-sm mb-2">Subscription</h2>
+          <p className="text-neutral-400 text-xs mb-5">Current plan: <span className="text-neutral-900 capitalize">{profile?.plan ?? "free"}</span></p>
           <Link
             href="/upgrade"
-            className="inline-flex items-center gap-2 bg-white text-black text-sm font-medium px-4 py-2.5 rounded-lg hover:bg-white/90 transition-colors"
+            className="inline-flex items-center gap-2 bg-neutral-900 text-white text-sm font-medium px-4 py-2.5 rounded-full hover:bg-neutral-700 transition-colors"
           >
             View plans →
           </Link>
@@ -224,30 +224,30 @@ export default function SettingsPage() {
       )}
 
       {activeTab === "password" && (
-        <div className="bg-[#161616] border border-white/12 rounded-xl p-5">
-          <h2 className="text-white font-medium text-sm mb-5">Change Password</h2>
+        <div className="bg-white border border-neutral-200 rounded-xl p-5">
+          <h2 className="text-neutral-900 font-medium text-sm mb-5">Change Password</h2>
           <div className="space-y-4">
             {[
               { label: "Current password", show: showCurrentPw, toggle: () => setShowCurrentPw((p) => !p) },
               { label: "New password", show: showNewPw, toggle: () => setShowNewPw((p) => !p) },
             ].map(({ label, show, toggle }) => (
               <div key={label}>
-                <label className="text-[#555] text-xs block mb-1.5">{label}</label>
+                <label className="text-neutral-500 text-xs block mb-1.5">{label}</label>
                 <div className="relative">
                   <input
                     type={show ? "text" : "password"}
-                    className="w-full bg-[#0c0c0c] border border-white/12 rounded-lg px-3 py-2.5 text-white text-sm focus:outline-none focus:border-white/30 transition-colors pr-10"
+                    className="w-full bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2.5 text-neutral-900 text-sm focus:outline-none focus:border-neutral-400 transition-colors pr-10"
                   />
-                  <button onClick={toggle} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#444] hover:text-white cursor-pointer">
+                  <button onClick={toggle} className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700 cursor-pointer">
                     {show ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
               </div>
             ))}
-            <p className="text-[#333] text-xs">Minimum 8 characters, one uppercase, one number.</p>
+            <p className="text-neutral-400 text-xs">Minimum 8 characters, one uppercase, one number.</p>
           </div>
           <div className="mt-5 flex justify-end">
-            <button className="flex items-center gap-2 bg-white text-black text-xs font-medium px-4 py-2 rounded-lg hover:bg-white/90 transition-colors cursor-pointer">
+            <button className="flex items-center gap-2 bg-neutral-900 text-white text-xs font-medium px-4 py-2 rounded-full hover:bg-neutral-700 transition-colors cursor-pointer">
               Update password
             </button>
           </div>
@@ -256,24 +256,24 @@ export default function SettingsPage() {
 
       {activeTab === "privacy" && (
         <div className="space-y-4">
-          <div className="bg-[#161616] border border-white/12 rounded-xl p-5">
-            <h2 className="text-white font-medium text-sm mb-4">Privacy</h2>
+          <div className="bg-white border border-neutral-200 rounded-xl p-5">
+            <h2 className="text-neutral-900 font-medium text-sm mb-4">Privacy</h2>
             <div className="space-y-3">
-              <button className="w-full text-left text-[#888] text-sm py-2 hover:text-white transition-colors cursor-pointer">Export my data →</button>
-              <Link href="#" className="block text-[#888] text-sm py-2 hover:text-white transition-colors">Privacy policy →</Link>
+              <button className="w-full text-left text-neutral-500 text-sm py-2 hover:text-neutral-900 transition-colors cursor-pointer">Export my data →</button>
+              <Link href="#" className="block text-neutral-500 text-sm py-2 hover:text-neutral-900 transition-colors">Privacy policy →</Link>
             </div>
           </div>
-          <div className="bg-[#161616] border border-red-500/20 rounded-xl p-5">
+          <div className="bg-white border border-red-200 rounded-xl p-5">
             <div className="flex items-start gap-3 mb-4">
               <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
               <div>
-                <h3 className="text-white font-medium text-sm mb-1">Danger zone</h3>
-                <p className="text-[#555] text-xs">These actions are permanent and cannot be undone.</p>
+                <h3 className="text-neutral-900 font-medium text-sm mb-1">Danger zone</h3>
+                <p className="text-neutral-500 text-xs">These actions are permanent and cannot be undone.</p>
               </div>
             </div>
             <div className="space-y-2">
-              <button className="w-full text-left text-red-400/70 hover:text-red-400 text-sm py-2 transition-colors cursor-pointer">Delete all goal data</button>
-              <button className="w-full text-left text-red-400/70 hover:text-red-400 text-sm py-2 transition-colors cursor-pointer">Delete account</button>
+              <button className="w-full text-left text-red-400 hover:text-red-600 text-sm py-2 transition-colors cursor-pointer">Delete all goal data</button>
+              <button className="w-full text-left text-red-400 hover:text-red-600 text-sm py-2 transition-colors cursor-pointer">Delete account</button>
             </div>
           </div>
         </div>

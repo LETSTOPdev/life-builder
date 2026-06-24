@@ -37,11 +37,11 @@ export default function BreakthroughPage() {
   return (
     <OnboardingShell step={6} totalSteps={7} showProgress={false}>
       <div>
-        <p className="text-[#666] text-xs font-medium tracking-widest uppercase mb-5">Your AI Analysis</p>
-        <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
+        <p className="text-neutral-400 text-xs font-medium tracking-widest uppercase mb-5">Your AI Analysis</p>
+        <h2 className="text-2xl sm:text-3xl font-bold text-neutral-900 mb-2">
           Here&apos;s what<br />Buildr sees.
         </h2>
-        <p className="text-[#666] text-sm mb-8">Based on your answers, here&apos;s your starting profile.</p>
+        <p className="text-neutral-500 text-sm mb-8">Based on your answers, here&apos;s your starting profile.</p>
 
         <div className="space-y-3 mb-8">
           {insights.map((ins) => {
@@ -49,15 +49,15 @@ export default function BreakthroughPage() {
             return (
               <div
                 key={ins.label}
-                className="bg-[#161616] border border-white/12 rounded-xl p-4 flex items-start gap-3"
+                className="bg-neutral-50 border border-neutral-200 rounded-xl p-4 flex items-start gap-3"
               >
-                <div className="w-8 h-8 rounded-lg bg-white/8 border border-white/12 flex items-center justify-center flex-shrink-0">
-                  <Icon className="w-4 h-4 text-white/60" strokeWidth={1.5} />
+                <div className="w-8 h-8 rounded-lg bg-neutral-100 border border-neutral-200 flex items-center justify-center flex-shrink-0">
+                  <Icon className="w-4 h-4 text-neutral-500" strokeWidth={1.5} />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-[10px] font-semibold uppercase tracking-widest text-[#555] mb-0.5">{ins.label}</p>
-                  <p className="text-white text-sm font-medium">{ins.value}</p>
-                  <p className="text-[#666] text-xs mt-0.5">{ins.sub}</p>
+                  <p className="text-[10px] font-semibold uppercase tracking-widest text-neutral-400 mb-0.5">{ins.label}</p>
+                  <p className="text-neutral-900 text-sm font-medium">{ins.value}</p>
+                  <p className="text-neutral-500 text-xs mt-0.5">{ins.sub}</p>
                 </div>
               </div>
             );
@@ -66,7 +66,7 @@ export default function BreakthroughPage() {
 
         <button
           onClick={() => router.push("/onboarding/plan")}
-          className="w-full bg-white text-black font-semibold py-3.5 rounded-xl text-sm cursor-pointer hover:bg-white/90 transition-colors flex items-center justify-center gap-2 group"
+          className="w-full bg-neutral-900 text-white font-semibold py-3.5 rounded-full text-sm cursor-pointer hover:bg-neutral-700 transition-colors flex items-center justify-center gap-2 group"
         >
           See My Action Plan
           <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />

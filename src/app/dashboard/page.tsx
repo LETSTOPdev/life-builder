@@ -70,9 +70,9 @@ export default function DashboardPage() {
   return (
     <div className="p-6 pb-24 lg:pb-6 max-w-5xl mx-auto">
       <div className="mb-8 pt-2">
-        <p className="text-[#444] text-xs mb-1">{today}</p>
-        <h1 className="text-2xl font-bold text-white">{greeting}, {name}</h1>
-        <p className="text-[#555] text-sm mt-1">
+        <p className="text-neutral-400 text-xs mb-1">{today}</p>
+        <h1 className="text-2xl font-bold text-neutral-900">{greeting}, {name}</h1>
+        <p className="text-neutral-500 text-sm mt-1">
           {analytics ? `${analytics.kpis.activeGoals} active goals · ${analytics.weeklyReview.focus}` : "Loading your dashboard…"}
         </p>
       </div>
@@ -81,10 +81,10 @@ export default function DashboardPage() {
         {stats.map((stat) => {
           const Icon = stat.icon;
           return (
-            <div key={stat.label} className="bg-[#161616] border border-white/12 rounded-xl p-4">
-              <Icon className="w-4 h-4 text-[#555] mb-3" strokeWidth={1.5} />
-              <div className="text-2xl font-bold text-white">{stat.value}</div>
-              <div className="text-[#555] text-xs mt-0.5">{stat.label}</div>
+            <div key={stat.label} className="bg-white border border-neutral-200 rounded-xl p-4">
+              <Icon className="w-4 h-4 text-neutral-400 mb-3" strokeWidth={1.5} />
+              <div className="text-2xl font-bold text-neutral-900">{stat.value}</div>
+              <div className="text-neutral-500 text-xs mt-0.5">{stat.label}</div>
             </div>
           );
         })}
@@ -93,41 +93,41 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         <div className="lg:col-span-2">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-white font-semibold text-sm">Active Goals</h2>
-            <Link href="/dashboard/goals" className="text-[#444] hover:text-white text-xs flex items-center gap-1 transition-colors">
+            <h2 className="text-neutral-900 font-semibold text-sm">Active Goals</h2>
+            <Link href="/dashboard/goals" className="text-neutral-400 hover:text-neutral-700 text-xs flex items-center gap-1 transition-colors">
               View all <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
 
           {goals.length === 0 ? (
-            <div className="bg-[#161616] border border-white/12 rounded-xl p-8 text-center">
-              <p className="text-[#555] text-sm">No active goals yet.</p>
-              <Link href="/dashboard/goals" className="text-white text-xs mt-2 inline-block hover:underline">
+            <div className="bg-white border border-neutral-200 rounded-xl p-8 text-center">
+              <p className="text-neutral-500 text-sm">No active goals yet.</p>
+              <Link href="/dashboard/goals" className="text-neutral-900 text-xs mt-2 inline-block hover:underline">
                 Add your first goal →
               </Link>
             </div>
           ) : (
             <div className="space-y-3">
               {goals.map((goal) => (
-                <div key={goal.id} className="bg-[#161616] border border-white/12 rounded-xl p-5 hover:border-white/20 transition-colors">
+                <div key={goal.id} className="bg-white border border-neutral-200 rounded-xl p-5 hover:border-neutral-400 transition-colors">
                   <div className="flex items-start justify-between mb-3">
                     <div>
-                      <h3 className="text-white font-medium text-sm">{goal.title}</h3>
+                      <h3 className="text-neutral-900 font-medium text-sm">{goal.title}</h3>
                       <div className="flex items-center gap-3 mt-1">
-                        <span className="text-[#555] text-xs">{goal.category}</span>
-                        <span className="text-[#555] text-xs flex items-center gap-1">
+                        <span className="text-neutral-400 text-xs">{goal.category}</span>
+                        <span className="text-neutral-400 text-xs flex items-center gap-1">
                           <Clock className="w-3 h-3" />{goal.daysLeft}d left
                         </span>
                         {goal.streak > 0 && (
-                          <span className="text-[#555] text-xs flex items-center gap-1">
+                          <span className="text-neutral-400 text-xs flex items-center gap-1">
                             <Flame className="w-3 h-3" />{goal.streak}d
                           </span>
                         )}
                       </div>
                     </div>
-                    <span className="text-white text-sm font-semibold">{goal.progress}%</span>
+                    <span className="text-neutral-900 text-sm font-semibold">{goal.progress}%</span>
                   </div>
-                  <Progress value={goal.progress} className="h-1 bg-white/8" />
+                  <Progress value={goal.progress} className="h-1 bg-neutral-100" />
                 </div>
               ))}
             </div>
@@ -136,26 +136,26 @@ export default function DashboardPage() {
 
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-white font-semibold text-sm">Weekly Review</h2>
-            <Link href="/dashboard/coach" className="text-[#444] hover:text-white text-xs flex items-center gap-1 transition-colors">
+            <h2 className="text-neutral-900 font-semibold text-sm">Weekly Review</h2>
+            <Link href="/dashboard/coach" className="text-neutral-400 hover:text-neutral-700 text-xs flex items-center gap-1 transition-colors">
               Coach <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
 
           <div className="space-y-3">
             {analytics?.weeklyReview.wins.map((win, i) => (
-              <div key={i} className="bg-[#161616] border border-white/12 rounded-xl p-4">
-                <div className="text-[10px] font-semibold uppercase tracking-widest text-[#555] mb-2">Win</div>
-                <p className="text-[#888] text-xs leading-relaxed">{win}</p>
+              <div key={i} className="bg-white border border-neutral-200 rounded-xl p-4">
+                <div className="text-[10px] font-semibold uppercase tracking-widest text-neutral-400 mb-2">Win</div>
+                <p className="text-neutral-600 text-xs leading-relaxed">{win}</p>
               </div>
             ))}
             {analytics && (
-              <div className="bg-[#161616] border border-white/12 rounded-xl p-4">
-                <div className="text-[10px] font-semibold uppercase tracking-widest text-[#555] mb-2">Recommendation</div>
-                <p className="text-[#888] text-xs leading-relaxed">{analytics.weeklyReview.recommendation}</p>
+              <div className="bg-white border border-neutral-200 rounded-xl p-4">
+                <div className="text-[10px] font-semibold uppercase tracking-widest text-neutral-400 mb-2">Recommendation</div>
+                <p className="text-neutral-600 text-xs leading-relaxed">{analytics.weeklyReview.recommendation}</p>
               </div>
             )}
-            <Link href="/dashboard/coach" className="w-full mt-1 py-2.5 border border-dashed border-white/12 text-[#555] text-xs rounded-xl hover:border-white/25 hover:text-[#888] transition-all flex items-center justify-center gap-2">
+            <Link href="/dashboard/coach" className="w-full mt-1 py-2.5 border border-dashed border-neutral-200 text-neutral-400 text-xs rounded-xl hover:border-neutral-400 hover:text-neutral-700 transition-all flex items-center justify-center gap-2">
               Ask your coach
             </Link>
           </div>

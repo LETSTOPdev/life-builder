@@ -55,22 +55,21 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0c0c0c] flex flex-col">
-      <div className="px-6 py-4 border-b border-white/8">
+    <div className="min-h-screen bg-white flex flex-col">
+      <div className="px-6 py-4 border-b border-neutral-100">
         <Link href="/" className="flex items-center gap-2 cursor-pointer w-fit">
-          <div className="w-6 h-6 rounded bg-white flex items-center justify-center">
-            <Zap className="w-3 h-3 text-black" fill="black" />
+          <div className="w-6 h-6 rounded bg-neutral-900 flex items-center justify-center">
+            <Zap className="w-3 h-3 text-white" fill="white" />
           </div>
-          <span className="text-white font-semibold text-sm">Buildr</span>
+          <span className="text-neutral-900 font-semibold text-sm">Buildr</span>
         </Link>
       </div>
 
       <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
         <div className="w-full max-w-sm">
-          <h1 className="text-2xl font-bold text-white mb-1">Create your account</h1>
-          <p className="text-[#555] text-sm mb-8">Free forever. Upgrade when you&apos;re ready.</p>
+          <h1 className="text-2xl font-bold text-neutral-900 mb-1">Create your account</h1>
+          <p className="text-neutral-500 text-sm mb-8">Free forever. Upgrade when you&apos;re ready.</p>
 
-          {/* OAuth */}
           <div className="space-y-2 mb-6">
             {[
               {
@@ -87,14 +86,14 @@ export default function SignupPage() {
               {
                 label: "Continue with LinkedIn",
                 icon: (
-                  <svg viewBox="0 0 24 24" className="w-4 h-4 flex-shrink-0" fill="currentColor">
+                  <svg viewBox="0 0 24 24" className="w-4 h-4 flex-shrink-0" fill="#0A66C2">
                     <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
                   </svg>
                 ),
               },
             ].map(({ label, icon }) => (
               <Link key={label} href="/onboarding">
-                <button className="w-full flex items-center gap-3 px-4 py-3 bg-[#161616] border border-white/12 rounded-xl text-sm text-white/70 hover:text-white hover:border-white/25 cursor-pointer transition-all">
+                <button className="w-full flex items-center gap-3 px-4 py-3 bg-neutral-50 border border-neutral-200 rounded-xl text-sm text-neutral-500 hover:text-neutral-900 hover:border-neutral-400 cursor-pointer transition-all">
                   {icon}
                   <span>{label}</span>
                 </button>
@@ -103,15 +102,14 @@ export default function SignupPage() {
           </div>
 
           <div className="flex items-center gap-3 mb-6">
-            <div className="flex-1 h-px bg-white/8" />
-            <span className="text-[#333] text-xs">or</span>
-            <div className="flex-1 h-px bg-white/8" />
+            <div className="flex-1 h-px bg-neutral-200" />
+            <span className="text-neutral-400 text-xs">or</span>
+            <div className="flex-1 h-px bg-neutral-200" />
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-            {/* Name */}
             <div>
-              <label htmlFor="name" className="text-[#888] text-xs font-medium uppercase tracking-wide block mb-1.5">Full name</label>
+              <label htmlFor="name" className="text-neutral-500 text-xs font-medium uppercase tracking-wide block mb-1.5">Full name</label>
               <input
                 id="name" type="text" placeholder="Alex Johnson"
                 value={form.name}
@@ -119,14 +117,13 @@ export default function SignupPage() {
                 autoComplete="name"
                 aria-invalid={!!errors.name}
                 aria-describedby={errors.name ? "name-error" : undefined}
-                className={`w-full bg-[#161616] border text-white placeholder-[#333] text-sm px-4 py-3 rounded-xl focus:outline-none transition-colors ${errors.name ? "border-red-500/60 focus:border-red-500/80" : "border-white/12 focus:border-white/30"}`}
+                className={`w-full bg-neutral-50 border text-neutral-900 placeholder-neutral-300 text-sm px-4 py-3 rounded-xl focus:outline-none transition-colors ${errors.name ? "border-red-400 focus:border-red-500" : "border-neutral-200 focus:border-neutral-400"}`}
               />
-              {errors.name && <p id="name-error" role="alert" className="flex items-center gap-1.5 text-red-400 text-xs mt-1.5"><AlertCircle className="w-3 h-3" />{errors.name}</p>}
+              {errors.name && <p id="name-error" role="alert" className="flex items-center gap-1.5 text-red-500 text-xs mt-1.5"><AlertCircle className="w-3 h-3" />{errors.name}</p>}
             </div>
 
-            {/* Email */}
             <div>
-              <label htmlFor="email" className="text-[#888] text-xs font-medium uppercase tracking-wide block mb-1.5">Email</label>
+              <label htmlFor="email" className="text-neutral-500 text-xs font-medium uppercase tracking-wide block mb-1.5">Email</label>
               <input
                 id="email" type="email" placeholder="you@example.com"
                 value={form.email}
@@ -134,14 +131,13 @@ export default function SignupPage() {
                 autoComplete="email"
                 aria-invalid={!!errors.email}
                 aria-describedby={errors.email ? "email-error" : undefined}
-                className={`w-full bg-[#161616] border text-white placeholder-[#333] text-sm px-4 py-3 rounded-xl focus:outline-none transition-colors ${errors.email ? "border-red-500/60 focus:border-red-500/80" : "border-white/12 focus:border-white/30"}`}
+                className={`w-full bg-neutral-50 border text-neutral-900 placeholder-neutral-300 text-sm px-4 py-3 rounded-xl focus:outline-none transition-colors ${errors.email ? "border-red-400 focus:border-red-500" : "border-neutral-200 focus:border-neutral-400"}`}
               />
-              {errors.email && <p id="email-error" role="alert" className="flex items-center gap-1.5 text-red-400 text-xs mt-1.5"><AlertCircle className="w-3 h-3" />{errors.email}</p>}
+              {errors.email && <p id="email-error" role="alert" className="flex items-center gap-1.5 text-red-500 text-xs mt-1.5"><AlertCircle className="w-3 h-3" />{errors.email}</p>}
             </div>
 
-            {/* Password */}
             <div>
-              <label htmlFor="password" className="text-[#888] text-xs font-medium uppercase tracking-wide block mb-1.5">Password</label>
+              <label htmlFor="password" className="text-neutral-500 text-xs font-medium uppercase tracking-wide block mb-1.5">Password</label>
               <div className="relative">
                 <input
                   id="password" type={show ? "text" : "password"} placeholder="Create a strong password"
@@ -151,28 +147,27 @@ export default function SignupPage() {
                   autoComplete="new-password"
                   aria-invalid={!!errors.password}
                   aria-describedby="password-rules"
-                  className={`w-full bg-[#161616] border text-white placeholder-[#333] text-sm px-4 py-3 rounded-xl focus:outline-none transition-colors pr-11 ${errors.password ? "border-red-500/60 focus:border-red-500/80" : "border-white/12 focus:border-white/30"}`}
+                  className={`w-full bg-neutral-50 border text-neutral-900 placeholder-neutral-300 text-sm px-4 py-3 rounded-xl focus:outline-none transition-colors pr-11 ${errors.password ? "border-red-400 focus:border-red-500" : "border-neutral-200 focus:border-neutral-400"}`}
                 />
                 <button
                   type="button"
                   onClick={() => setShow(s => !s)}
                   aria-label={show ? "Hide password" : "Show password"}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#444] hover:text-white cursor-pointer transition-colors p-1"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700 cursor-pointer transition-colors p-1"
                 >
                   {show ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
-              {errors.password && <p id="password-error" role="alert" className="flex items-center gap-1.5 text-red-400 text-xs mt-1.5"><AlertCircle className="w-3 h-3" />{errors.password}</p>}
+              {errors.password && <p id="password-error" role="alert" className="flex items-center gap-1.5 text-red-500 text-xs mt-1.5"><AlertCircle className="w-3 h-3" />{errors.password}</p>}
 
-              {/* Password strength indicator */}
               {(focusedPassword && form.password) && (
                 <div id="password-rules" className="mt-2 space-y-1">
                   {passwordRules.map(rule => {
                     const ok = rule.test(form.password);
                     return (
-                      <div key={rule.label} className={`flex items-center gap-1.5 text-xs transition-colors ${ok ? "text-white/50" : "text-[#444]"}`}>
-                        <div className={`w-3 h-3 rounded-full border flex items-center justify-center transition-all ${ok ? "bg-white/20 border-white/30" : "border-white/15"}`}>
-                          {ok && <Check className="w-2 h-2" />}
+                      <div key={rule.label} className={`flex items-center gap-1.5 text-xs transition-colors ${ok ? "text-neutral-700" : "text-neutral-400"}`}>
+                        <div className={`w-3 h-3 rounded-full border flex items-center justify-center transition-all ${ok ? "bg-neutral-900 border-neutral-900" : "border-neutral-300"}`}>
+                          {ok && <Check className="w-2 h-2 text-white" />}
                         </div>
                         {rule.label}
                       </div>
@@ -182,30 +177,30 @@ export default function SignupPage() {
               )}
             </div>
 
-            <p className="text-[#333] text-xs leading-relaxed">
+            <p className="text-neutral-400 text-xs leading-relaxed">
               By creating an account you agree to our{" "}
-              <Link href="/terms" className="text-[#555] hover:text-white cursor-pointer transition-colors underline underline-offset-2">Terms</Link>
+              <Link href="/terms" className="text-neutral-600 hover:text-neutral-900 cursor-pointer transition-colors underline underline-offset-2">Terms</Link>
               {" and "}
-              <Link href="/privacy" className="text-[#555] hover:text-white cursor-pointer transition-colors underline underline-offset-2">Privacy Policy</Link>.
+              <Link href="/privacy" className="text-neutral-600 hover:text-neutral-900 cursor-pointer transition-colors underline underline-offset-2">Privacy Policy</Link>.
             </p>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-white text-black font-semibold py-3 rounded-xl text-sm cursor-pointer hover:bg-white/90 transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full bg-neutral-900 text-white font-semibold py-3 rounded-full text-sm cursor-pointer hover:bg-neutral-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>
-                  <span className="w-4 h-4 border-2 border-black/20 border-t-black rounded-full animate-spin" />
+                  <span className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
                   Creating account...
                 </>
               ) : "Create account"}
             </button>
           </form>
 
-          <p className="text-center text-[#444] text-xs mt-6">
+          <p className="text-center text-neutral-400 text-xs mt-6">
             Already have an account?{" "}
-            <Link href="/auth/login" className="text-white hover:text-white/80 cursor-pointer transition-colors">
+            <Link href="/auth/login" className="text-neutral-700 hover:text-neutral-900 cursor-pointer transition-colors">
               Sign in
             </Link>
           </p>

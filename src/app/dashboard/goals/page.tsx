@@ -104,92 +104,90 @@ export default function GoalsPage() {
     <div className="p-6 pb-24 lg:pb-6 max-w-4xl mx-auto">
       <div className="flex items-center justify-between mb-8 pt-2">
         <div>
-          <h1 className="text-2xl font-bold text-white">Goals</h1>
-          <p className="text-[#555] text-sm mt-1">{goals.filter((g) => g.status === "active").length} active · {goals.filter((g) => g.status === "completed").length} completed</p>
+          <h1 className="text-2xl font-bold text-neutral-900">Goals</h1>
+          <p className="text-neutral-500 text-sm mt-1">{goals.filter((g) => g.status === "active").length} active · {goals.filter((g) => g.status === "completed").length} completed</p>
         </div>
         <button
           onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 bg-white text-black text-sm font-medium px-4 py-2 rounded-lg hover:bg-white/90 transition-colors cursor-pointer"
+          className="flex items-center gap-2 bg-neutral-900 text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-neutral-700 transition-colors cursor-pointer"
         >
           <Plus className="w-4 h-4" /> New goal
         </button>
       </div>
 
-      {/* Filters */}
       <div className="flex items-center gap-2 mb-4 flex-wrap">
         {["active", "completed", "all"].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer capitalize ${activeTab === tab ? "bg-white/10 text-white" : "text-[#555] hover:text-[#888]"}`}
+            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer capitalize ${activeTab === tab ? "bg-neutral-100 text-neutral-900" : "text-neutral-400 hover:text-neutral-700"}`}
           >
             {tab}
           </button>
         ))}
-        <div className="w-px h-4 bg-white/10 mx-1" />
+        <div className="w-px h-4 bg-neutral-200 mx-1" />
         {categories.map((cat) => (
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
-            className={`px-3 py-1.5 rounded-md text-xs transition-colors cursor-pointer ${activeCategory === cat ? "bg-white/10 text-white" : "text-[#555] hover:text-[#888]"}`}
+            className={`px-3 py-1.5 rounded-md text-xs transition-colors cursor-pointer ${activeCategory === cat ? "bg-neutral-100 text-neutral-900" : "text-neutral-400 hover:text-neutral-700"}`}
           >
             {cat}
           </button>
         ))}
       </div>
 
-      {/* Goal list */}
       {loading ? (
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-[#161616] border border-white/12 rounded-xl p-5 animate-pulse">
-              <div className="h-4 w-1/2 bg-white/8 rounded mb-3" />
-              <div className="h-1 w-full bg-white/8 rounded" />
+            <div key={i} className="bg-white border border-neutral-200 rounded-xl p-5 animate-pulse">
+              <div className="h-4 w-1/2 bg-neutral-100 rounded mb-3" />
+              <div className="h-1 w-full bg-neutral-100 rounded" />
             </div>
           ))}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="bg-[#161616] border border-white/12 rounded-xl p-12 text-center">
-          <Target className="w-8 h-8 text-[#333] mx-auto mb-3" />
-          <p className="text-[#555] text-sm">No goals here yet.</p>
-          <button onClick={() => setShowModal(true)} className="text-white text-xs mt-2 hover:underline cursor-pointer">
+        <div className="bg-white border border-neutral-200 rounded-xl p-12 text-center">
+          <Target className="w-8 h-8 text-neutral-300 mx-auto mb-3" />
+          <p className="text-neutral-500 text-sm">No goals here yet.</p>
+          <button onClick={() => setShowModal(true)} className="text-neutral-900 text-xs mt-2 hover:underline cursor-pointer">
             Create your first goal →
           </button>
         </div>
       ) : (
         <div className="space-y-3">
           {filtered.map((goal) => (
-            <div key={goal.id} className={`bg-[#161616] border rounded-xl p-5 transition-colors group ${goal.status === "completed" ? "border-white/6 opacity-70" : "border-white/12 hover:border-white/20"}`}>
+            <div key={goal.id} className={`bg-white border rounded-xl p-5 transition-colors group ${goal.status === "completed" ? "border-neutral-100 opacity-70" : "border-neutral-200 hover:border-neutral-400"}`}>
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1 min-w-0 pr-4">
                   <div className="flex items-center gap-2 mb-1">
                     <button
                       onClick={() => handleComplete(goal)}
-                      className={`w-4 h-4 rounded-sm border flex items-center justify-center flex-shrink-0 cursor-pointer transition-colors ${goal.status === "completed" ? "bg-white border-white" : "border-white/25 hover:border-white/50"}`}
+                      className={`w-4 h-4 rounded-sm border flex items-center justify-center flex-shrink-0 cursor-pointer transition-colors ${goal.status === "completed" ? "bg-neutral-900 border-neutral-900" : "border-neutral-300 hover:border-neutral-500"}`}
                     >
-                      {goal.status === "completed" && <CheckCircle2 className="w-3 h-3 text-black" />}
+                      {goal.status === "completed" && <CheckCircle2 className="w-3 h-3 text-white" />}
                     </button>
-                    <h3 className={`text-white font-medium text-sm ${goal.status === "completed" ? "line-through text-[#555]" : ""}`}>{goal.title}</h3>
+                    <h3 className={`text-neutral-900 font-medium text-sm ${goal.status === "completed" ? "line-through text-neutral-400" : ""}`}>{goal.title}</h3>
                   </div>
-                  {goal.description && <p className="text-[#444] text-xs ml-6 mb-2">{goal.description}</p>}
+                  {goal.description && <p className="text-neutral-400 text-xs ml-6 mb-2">{goal.description}</p>}
                   <div className="flex items-center gap-3 ml-6">
-                    <span className="text-[#444] text-xs bg-white/5 px-2 py-0.5 rounded">{goal.category}</span>
-                    <span className="text-[#444] text-xs flex items-center gap-1"><Clock className="w-3 h-3" />{goal.daysLeft}d left</span>
-                    {goal.streak > 0 && <span className="text-[#444] text-xs flex items-center gap-1"><Flame className="w-3 h-3" />{goal.streak}d streak</span>}
+                    <span className="text-neutral-400 text-xs bg-neutral-100 px-2 py-0.5 rounded">{goal.category}</span>
+                    <span className="text-neutral-400 text-xs flex items-center gap-1"><Clock className="w-3 h-3" />{goal.daysLeft}d left</span>
+                    {goal.streak > 0 && <span className="text-neutral-400 text-xs flex items-center gap-1"><Flame className="w-3 h-3" />{goal.streak}d streak</span>}
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-white text-sm font-semibold">{goal.progress}%</span>
+                  <span className="text-neutral-900 text-sm font-semibold">{goal.progress}%</span>
                   <button
                     onClick={() => handleDelete(goal.id)}
-                    className="opacity-0 group-hover:opacity-100 text-[#444] hover:text-red-400 transition-all cursor-pointer p-1"
+                    className="opacity-0 group-hover:opacity-100 text-neutral-300 hover:text-red-500 transition-all cursor-pointer p-1"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
               <div className="ml-6">
-                <Progress value={goal.progress} className="h-1 mb-2 bg-white/8" />
+                <Progress value={goal.progress} className="h-1 mb-2 bg-neutral-100" />
                 <input
                   type="range"
                   min={0}
@@ -198,7 +196,7 @@ export default function GoalsPage() {
                   onChange={(e) => setGoals((prev) => prev.map((g) => g.id === goal.id ? { ...g, progress: Number(e.target.value) } : g))}
                   onMouseUp={(e) => handleProgressChange(goal.id, Number((e.target as HTMLInputElement).value))}
                   onTouchEnd={(e) => handleProgressChange(goal.id, Number((e.target as HTMLInputElement).value))}
-                  className="w-full h-1 bg-transparent appearance-none cursor-pointer [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:appearance-none"
+                  className="w-full h-1 bg-transparent appearance-none cursor-pointer [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-neutral-900 [&::-webkit-slider-thumb]:appearance-none"
                 />
               </div>
             </div>
@@ -206,64 +204,63 @@ export default function GoalsPage() {
         </div>
       )}
 
-      {/* Add goal modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true">
-          <div className="bg-[#111] border border-white/12 rounded-2xl p-6 w-full max-w-md">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true">
+          <div className="bg-white border border-neutral-200 rounded-2xl p-6 w-full max-w-md shadow-xl">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-white font-semibold">New Goal</h2>
-              <button onClick={() => setShowModal(false)} className="text-[#555] hover:text-white cursor-pointer transition-colors">
+              <h2 className="text-neutral-900 font-semibold">New Goal</h2>
+              <button onClick={() => setShowModal(false)} className="text-neutral-400 hover:text-neutral-700 cursor-pointer transition-colors">
                 <X className="w-5 h-5" />
               </button>
             </div>
             <form onSubmit={handleAdd} className="space-y-4">
               <div>
-                <label className="text-[#666] text-xs block mb-1.5">Goal title *</label>
+                <label className="text-neutral-500 text-xs block mb-1.5">Goal title *</label>
                 <input
                   value={newGoal.title}
                   onChange={(e) => setNewGoal((p) => ({ ...p, title: e.target.value }))}
                   placeholder="e.g. Run a half marathon"
-                  className="w-full bg-[#0c0c0c] border border-white/12 rounded-lg px-3 py-2.5 text-white text-sm placeholder:text-[#333] focus:outline-none focus:border-white/30 transition-colors"
+                  className="w-full bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2.5 text-neutral-900 text-sm placeholder:text-neutral-300 focus:outline-none focus:border-neutral-400 transition-colors"
                 />
               </div>
               <div>
-                <label className="text-[#666] text-xs block mb-1.5">Description</label>
+                <label className="text-neutral-500 text-xs block mb-1.5">Description</label>
                 <textarea
                   value={newGoal.description}
                   onChange={(e) => setNewGoal((p) => ({ ...p, description: e.target.value }))}
                   placeholder="What does success look like?"
                   rows={2}
-                  className="w-full bg-[#0c0c0c] border border-white/12 rounded-lg px-3 py-2.5 text-white text-sm placeholder:text-[#333] focus:outline-none focus:border-white/30 transition-colors resize-none"
+                  className="w-full bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2.5 text-neutral-900 text-sm placeholder:text-neutral-300 focus:outline-none focus:border-neutral-400 transition-colors resize-none"
                 />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[#666] text-xs block mb-1.5">Category</label>
+                  <label className="text-neutral-500 text-xs block mb-1.5">Category</label>
                   <select
                     value={newGoal.category}
                     onChange={(e) => setNewGoal((p) => ({ ...p, category: e.target.value }))}
-                    className="w-full bg-[#0c0c0c] border border-white/12 rounded-lg px-3 py-2.5 text-white text-sm focus:outline-none focus:border-white/30 transition-colors cursor-pointer"
+                    className="w-full bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2.5 text-neutral-900 text-sm focus:outline-none focus:border-neutral-400 transition-colors cursor-pointer"
                   >
                     {catOptions.map((c) => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="text-[#666] text-xs block mb-1.5">Days to achieve</label>
+                  <label className="text-neutral-500 text-xs block mb-1.5">Days to achieve</label>
                   <input
                     type="number"
                     min={1}
                     value={newGoal.daysLeft}
                     onChange={(e) => setNewGoal((p) => ({ ...p, daysLeft: Number(e.target.value) }))}
-                    className="w-full bg-[#0c0c0c] border border-white/12 rounded-lg px-3 py-2.5 text-white text-sm focus:outline-none focus:border-white/30 transition-colors"
+                    className="w-full bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2.5 text-neutral-900 text-sm focus:outline-none focus:border-neutral-400 transition-colors"
                   />
                 </div>
               </div>
-              {formError && <p className="text-red-400 text-xs">{formError}</p>}
+              {formError && <p className="text-red-500 text-xs">{formError}</p>}
               <div className="flex gap-3 pt-2">
-                <button type="button" onClick={() => setShowModal(false)} className="flex-1 py-2.5 border border-white/12 text-[#555] text-sm rounded-lg hover:text-white hover:border-white/25 transition-colors cursor-pointer">
+                <button type="button" onClick={() => setShowModal(false)} className="flex-1 py-2.5 border border-neutral-200 text-neutral-500 text-sm rounded-full hover:text-neutral-900 hover:border-neutral-400 transition-colors cursor-pointer">
                   Cancel
                 </button>
-                <button type="submit" disabled={saving} className="flex-1 py-2.5 bg-white text-black text-sm font-medium rounded-lg hover:bg-white/90 transition-colors cursor-pointer disabled:opacity-50">
+                <button type="submit" disabled={saving} className="flex-1 py-2.5 bg-neutral-900 text-white text-sm font-medium rounded-full hover:bg-neutral-700 transition-colors cursor-pointer disabled:opacity-50">
                   {saving ? "Saving…" : "Create goal"}
                 </button>
               </div>
