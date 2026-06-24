@@ -3,6 +3,53 @@ import { randomBytes } from "crypto";
 import { getDb } from "@/lib/db";
 import { newId, jsonResponse, errorResponse } from "@/lib/auth";
 
+async function sendResetEmail(to: string, resetUrl: string): Promise<void> {
+  const apiKey = process.env.RESEND_API_KEY;
+  const from = process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev";
+
+  if (!apiKey) {
+    // Fallback: log to console for local dev without Resend configured
+    console.log(`\n🔑 Password reset link for ${to}:\n${resetUrl}\n`);
+    return;
+  }
+
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from,
+      to,
+      subject: "Reset your Life Builder password",
+      html: `
+        <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;">
+          <h2 style="font-size:22px;font-weight:700;color:#111;margin-bottom:8px;">Reset your password</h2>
+          <p style="color:#555;font-size:15px;line-height:1.6;margin-bottom:24px;">
+            We received a request to reset the password for your Life Builder account.
+            Click the button below to choose a new password. This link expires in 1 hour.
+          </p>
+          <a href="${resetUrl}"
+             style="display:inline-block;background:#111;color:#fff;text-decoration:none;
+                    padding:13px 28px;border-radius:999px;font-size:14px;font-weight:600;">
+            Reset password
+          </a>
+          <p style="color:#999;font-size:13px;margin-top:32px;line-height:1.5;">
+            If you didn&rsquo;t request this, you can safely ignore this email.
+            Your password will not change.
+          </p>
+        </div>
+      `,
+    }),
+  });
+
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`Resend error ${res.status}: ${body}`);
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { email } = await req.json();
@@ -33,9 +80,7 @@ export async function POST(req: NextRequest) {
     const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
     const resetUrl = `${appUrl}/auth/reset-password?token=${token}`;
 
-    // In production, send this via email (e.g. Resend, Postmark, SendGrid).
-    // For now, log it to the console so you can test locally.
-    console.log(`\n🔑 Password reset link for ${user.email}:\n${resetUrl}\n`);
+    await sendResetEmail(user.email, resetUrl);
 
     return jsonResponse({ message: "If that email exists, a reset link has been sent." });
   } catch (e) {
