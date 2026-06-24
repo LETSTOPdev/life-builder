@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Brain, Target, TrendingUp, Calendar, Sparkles, Shield, Zap, BarChart3 } from "lucide-react";
+import { Brain, Target, TrendingUp, Calendar, Sparkles, Shield, Zap, BarChart3, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 const features = [
   {
@@ -60,11 +61,56 @@ export function FeaturesSection() {
           <p className="text-xs uppercase tracking-[0.18em] text-neutral-400 font-medium mb-4">
             Everything you need
           </p>
-          <h2 className="text-4xl sm:text-5xl font-bold text-neutral-900 leading-tight tracking-tight max-w-xl">
-            Your complete life<br />operating system
-          </h2>
+          <div className="flex items-end justify-between flex-wrap gap-4">
+            <h2 className="text-4xl sm:text-5xl font-bold text-neutral-900 leading-tight tracking-tight max-w-xl">
+              Your complete life<br />operating system
+            </h2>
+            <Link href="/auth" className="hidden sm:inline-flex items-center gap-2 text-neutral-500 hover:text-neutral-900 text-sm transition-colors border-b border-neutral-200 hover:border-neutral-500 pb-px">
+              Get started free <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
         </motion.div>
 
+        {/* Spotlight feature */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mb-3 bg-neutral-900 rounded-2xl p-8 sm:p-10 flex flex-col sm:flex-row items-start gap-8"
+        >
+          <div className="flex-1">
+            <span className="inline-block text-[10px] font-semibold uppercase tracking-widest text-neutral-400 bg-white/10 px-2.5 py-1 rounded-full mb-5">
+              Core feature
+            </span>
+            <h3 className="text-white text-2xl sm:text-3xl font-bold tracking-tight mb-4 leading-tight">
+              Your Digital Twin —<br />an AI that truly knows you
+            </h3>
+            <p className="text-neutral-400 text-sm leading-relaxed max-w-md">
+              Unlike generic AI assistants, your Digital Twin builds a model of you from your goals, habits, journals, and results. Every week it gets smarter. Every recommendation gets more precise. It's the difference between advice and insight.
+            </p>
+          </div>
+          <div className="w-full sm:w-64 flex-shrink-0 bg-white/5 border border-white/10 rounded-xl p-5 space-y-3">
+            {[
+              { label: "Sleep → Productivity", correlation: "+0.82", positive: true },
+              { label: "Morning runs → Mood", correlation: "+0.74", positive: true },
+              { label: "Late screens → Focus", correlation: "−0.61", positive: false },
+              { label: "Journal streak → Goals", correlation: "+0.91", positive: true },
+            ].map((item) => (
+              <div key={item.label} className="flex items-center justify-between gap-2">
+                <span className="text-neutral-400 text-xs">{item.label}</span>
+                <span className={`text-xs font-mono font-semibold ${item.positive ? "text-emerald-400" : "text-red-400"}`}>
+                  {item.correlation}
+                </span>
+              </div>
+            ))}
+            <div className="pt-2 border-t border-white/10">
+              <p className="text-[10px] text-neutral-500">Correlation insights · updated weekly</p>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Feature grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-neutral-100 border border-neutral-100 rounded-2xl overflow-hidden">
           {features.map((feature, i) => {
             const Icon = feature.icon;

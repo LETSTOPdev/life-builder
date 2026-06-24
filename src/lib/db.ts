@@ -79,5 +79,30 @@ function migrate(db: Database.Database) {
     CREATE INDEX IF NOT EXISTS idx_goals_user ON goals(user_id);
     CREATE INDEX IF NOT EXISTS idx_journal_user ON journal_entries(user_id);
     CREATE INDEX IF NOT EXISTS idx_coach_user ON coach_messages(user_id);
+
+    -- Stripe columns (added via ALTER TABLE so they don't break existing DBs)
+  `);
+
+  // Safely add Stripe columns if they don't exist yet
+  const cols = db.prepare("PRAGMA table_info(users)").all() as { name: string }[];
+  const colNames = cols.map((c) => c.name);
+  if (!colNames.includes("stripe_customer_id")) {
+    db.exec("ALTER TABLE users ADD COLUMN stripe_customer_id TEXT");
+  }
+  if (!colNames.includes("stripe_subscription_id")) {
+    db.exec("ALTER TABLE users ADD COLUMN stripe_subscription_id TEXT");
+  }
+
+  // Password reset tokens table
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS password_reset_tokens (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      token TEXT NOT NULL UNIQUE,
+      expires_at TEXT NOT NULL,
+      used INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS idx_reset_token ON password_reset_tokens(token);
   `);
 }

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, AlertCircle } from "lucide-react";
 import { Navbar } from "@/components/layout/navbar";
+import { Footer } from "@/components/layout/footer";
 
 function SocialLink({ icon, label, href }: { icon: React.ReactNode; label: string; href: string }) {
   return (
@@ -121,6 +122,7 @@ export default function AuthPage() {
           </p>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

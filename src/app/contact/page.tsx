@@ -2,7 +2,28 @@
 
 import { useState } from "react";
 import { StaticShell, StaticHeading } from "@/components/layout/static-shell";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Clock, Mail, Building2 } from "lucide-react";
+
+const channels = [
+  {
+    icon: Clock,
+    label: "Response time",
+    value: "Under 24 hours",
+    sub: "Mon – Fri, 9am – 6pm PT",
+  },
+  {
+    icon: Mail,
+    label: "General",
+    value: "hello@buildr.io",
+    sub: "Questions, partnerships, press",
+  },
+  {
+    icon: Building2,
+    label: "Enterprise",
+    value: "enterprise@buildr.io",
+    sub: "Teams, custom plans, SSO",
+  },
+];
 
 export default function ContactPage() {
   const [sent, setSent] = useState(false);
@@ -21,7 +42,9 @@ export default function ContactPage() {
             <CheckCircle2 className="w-6 h-6 text-neutral-400" />
           </div>
           <h2 className="text-2xl font-bold text-neutral-900 mb-2">Message sent</h2>
-          <p className="text-neutral-500 text-sm">We&apos;ll get back to you within 24 hours.</p>
+          <p className="text-neutral-500 text-sm max-w-xs leading-relaxed">
+            We read every message and typically respond within 24 hours on weekdays.
+          </p>
         </div>
       </StaticShell>
     );
@@ -32,8 +55,20 @@ export default function ContactPage() {
       <StaticHeading
         label="Contact"
         title="Get in touch."
-        subtitle="We read every message. Typical response time is under 24 hours."
+        subtitle="We read every message. Real humans, real replies."
       />
+
+      {/* Channel cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-10">
+        {channels.map(({ icon: Icon, label, value, sub }) => (
+          <div key={label} className="bg-neutral-50 border border-neutral-200 rounded-xl p-4">
+            <Icon className="w-4 h-4 text-neutral-400 mb-3" strokeWidth={1.5} />
+            <p className="text-neutral-400 text-xs uppercase tracking-widest mb-1">{label}</p>
+            <p className="text-neutral-900 text-sm font-medium">{value}</p>
+            <p className="text-neutral-400 text-xs mt-0.5">{sub}</p>
+          </div>
+        ))}
+      </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -61,7 +96,7 @@ export default function ContactPage() {
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-neutral-500 mb-1.5 uppercase tracking-wide">Subject</label>
+          <label className="block text-xs font-medium text-neutral-500 mb-1.5 uppercase tracking-wide">Topic</label>
           <select
             required
             value={form.subject}
@@ -96,18 +131,12 @@ export default function ContactPage() {
         >
           Send Message
         </button>
-      </form>
 
-      <div className="mt-12 pt-8 border-t border-neutral-100 grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <div>
-          <p className="text-neutral-400 text-xs uppercase tracking-widest mb-1">Email</p>
-          <p className="text-neutral-900 text-sm">hello@buildr.io</p>
-        </div>
-        <div>
-          <p className="text-neutral-400 text-xs uppercase tracking-widest mb-1">Support</p>
-          <p className="text-neutral-900 text-sm">support@buildr.io</p>
-        </div>
-      </div>
+        <p className="text-center text-neutral-400 text-xs">
+          By submitting you agree to our{" "}
+          <a href="/privacy" className="underline underline-offset-2 hover:text-neutral-600 transition-colors">Privacy Policy</a>.
+        </p>
+      </form>
     </StaticShell>
   );
 }

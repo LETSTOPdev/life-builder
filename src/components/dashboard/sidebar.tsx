@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { LayoutDashboard, Target, Brain, BarChart3, BookOpen, Settings, Zap, ArrowUp } from "lucide-react";
+import { LayoutDashboard, Target, Brain, BarChart3, BookOpen, Settings, Zap, ArrowUp, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 const navItems = [
   { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
@@ -20,7 +21,9 @@ const bottomItems = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [profile, setProfile] = useState<{ name: string; email: string; plan: string } | null>(null);
+  const [loggingOut, setLoggingOut] = useState(false);
 
   useEffect(() => {
     fetch("/api/user/profile")
@@ -30,6 +33,17 @@ export function Sidebar() {
   }, []);
 
   const initials = profile?.name?.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase() ?? "?";
+
+  const handleLogout = async () => {
+    setLoggingOut(true);
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+      router.push("/auth/login");
+    } catch {
+      toast.error("Logout failed. Please try again.");
+      setLoggingOut(false);
+    }
+  };
 
   return (
     <aside className="hidden lg:flex flex-col w-56 bg-white border-r border-neutral-100 h-screen sticky top-0">
@@ -98,6 +112,15 @@ export function Sidebar() {
             </Link>
           );
         })}
+
+        <button
+          onClick={handleLogout}
+          disabled={loggingOut}
+          className="w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-sm text-neutral-400 hover:text-red-500 hover:bg-red-50 cursor-pointer transition-colors disabled:opacity-50"
+        >
+          <LogOut className="w-4 h-4" strokeWidth={1.5} />
+          {loggingOut ? "Signing out…" : "Sign out"}
+        </button>
 
         <div className="flex items-center gap-2.5 px-3 py-2 rounded-md hover:bg-neutral-50 cursor-pointer transition-colors mt-1">
           <div className="w-5 h-5 rounded-full bg-neutral-200 border border-neutral-300 flex items-center justify-center text-neutral-700 text-[9px] font-bold flex-shrink-0">

@@ -2,14 +2,17 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Check, Zap } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 import { Navbar } from "@/components/layout/navbar";
+import { Footer } from "@/components/layout/footer";
+import { toast } from "sonner";
 
 const plans = [
   {
     name: "Free",
     price: { monthly: 0, annual: 0 },
     tagline: "Start your journey",
+    planKey: null,
     features: [
       "Basic goal tracking",
       "3 active goals",
@@ -25,6 +28,7 @@ const plans = [
     name: "Pro",
     price: { monthly: 19, annual: 15 },
     tagline: "For serious builders",
+    planKey: "pro",
     features: [
       "Unlimited goals",
       "Unlimited AI coaching",
@@ -34,7 +38,6 @@ const plans = [
       "Weekly strategy reviews",
     ],
     cta: "Start Pro Trial",
-    href: "/auth",
     highlighted: true,
     badge: "Most popular",
   },
@@ -42,6 +45,7 @@ const plans = [
     name: "Premium",
     price: { monthly: 49, annual: 39 },
     tagline: "For accelerated growth",
+    planKey: "premium",
     features: [
       "Everything in Pro",
       "Business growth tools",
@@ -50,13 +54,13 @@ const plans = [
       "Priority support",
     ],
     cta: "Start Premium Trial",
-    href: "/auth",
     highlighted: false,
   },
   {
     name: "Elite",
     price: { monthly: 149, annual: 119 },
     tagline: "For maximum results",
+    planKey: "elite",
     features: [
       "Everything in Premium",
       "1:1 strategy sessions",
@@ -81,6 +85,30 @@ const faqs = [
 
 export default function UpgradePage() {
   const [annual, setAnnual] = useState(false);
+  const [loading, setLoading] = useState<string | null>(null);
+
+  const handleUpgrade = async (planKey: string) => {
+    setLoading(planKey);
+    try {
+      const res = await fetch("/api/lemonsqueezy/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: planKey, billing: annual ? "annual" : "monthly" }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.error ?? "Could not start checkout. Please try again.");
+        return;
+      }
+
+      window.location.href = data.url;
+    } catch {
+      toast.error("Network error. Please try again.");
+    } finally {
+      setLoading(null);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
@@ -112,62 +140,85 @@ export default function UpgradePage() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-20">
-          {plans.map((plan) => (
-            <div
-              key={plan.name}
-              className={`relative rounded-2xl border p-6 flex flex-col ${
-                plan.highlighted
-                  ? "bg-neutral-900 border-neutral-900"
-                  : "bg-white border-neutral-200"
-              }`}
-            >
-              {plan.badge && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                  <span className="bg-neutral-900 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">
-                    {plan.badge}
-                  </span>
-                </div>
-              )}
+          {plans.map((plan) => {
+            const isLoading = loading === plan.planKey;
 
-              <div className="mb-6">
-                <p className={`text-xs font-semibold uppercase tracking-widest mb-1 ${plan.highlighted ? "text-white/50" : "text-neutral-400"}`}>
-                  {plan.name}
-                </p>
-                <div className={`text-3xl font-bold mb-1 ${plan.highlighted ? "text-white" : "text-neutral-900"}`}>
-                  {plan.price[annual ? "annual" : "monthly"] === 0
-                    ? "Free"
-                    : `$${plan.price[annual ? "annual" : "monthly"]}`}
-                  {plan.price.monthly > 0 && (
-                    <span className={`text-sm font-normal ml-1 ${plan.highlighted ? "text-white/40" : "text-neutral-400"}`}>/mo</span>
-                  )}
-                </div>
-                <p className={`text-xs ${plan.highlighted ? "text-white/50" : "text-neutral-500"}`}>{plan.tagline}</p>
-              </div>
-
-              <ul className="space-y-2.5 flex-1 mb-6">
-                {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-2">
-                    <Check
-                      className={`w-3.5 h-3.5 mt-0.5 flex-shrink-0 ${plan.highlighted ? "text-white/60" : "text-neutral-400"}`}
-                      strokeWidth={2.5}
-                    />
-                    <span className={`text-sm ${plan.highlighted ? "text-white/70" : "text-neutral-600"}`}>{feature}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <Link
-                href={plan.href}
-                className={`w-full py-2.5 rounded-full text-sm font-semibold cursor-pointer transition-all inline-flex items-center justify-center ${
+            return (
+              <div
+                key={plan.name}
+                className={`relative rounded-2xl border p-6 flex flex-col ${
                   plan.highlighted
-                    ? "bg-white text-neutral-900 hover:bg-neutral-100"
-                    : "bg-neutral-900 text-white hover:bg-neutral-700 border border-neutral-900"
+                    ? "bg-neutral-900 border-neutral-900"
+                    : "bg-white border-neutral-200"
                 }`}
               >
-                {plan.cta}
-              </Link>
-            </div>
-          ))}
+                {plan.badge && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap">
+                    <span className="bg-neutral-900 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                      {plan.badge}
+                    </span>
+                  </div>
+                )}
+
+                <div className="mb-6">
+                  <p className={`text-xs font-semibold uppercase tracking-widest mb-1 ${plan.highlighted ? "text-white/50" : "text-neutral-400"}`}>
+                    {plan.name}
+                  </p>
+                  <div className={`text-3xl font-bold mb-1 ${plan.highlighted ? "text-white" : "text-neutral-900"}`}>
+                    {plan.price[annual ? "annual" : "monthly"] === 0
+                      ? "Free"
+                      : `$${plan.price[annual ? "annual" : "monthly"]}`}
+                    {plan.price.monthly > 0 && (
+                      <span className={`text-sm font-normal ml-1 ${plan.highlighted ? "text-white/40" : "text-neutral-400"}`}>/mo</span>
+                    )}
+                  </div>
+                  <p className={`text-xs ${plan.highlighted ? "text-white/50" : "text-neutral-500"}`}>{plan.tagline}</p>
+                </div>
+
+                <ul className="space-y-2.5 flex-1 mb-6">
+                  {plan.features.map((feature) => (
+                    <li key={feature} className="flex items-start gap-2">
+                      <Check
+                        className={`w-3.5 h-3.5 mt-0.5 flex-shrink-0 ${plan.highlighted ? "text-white/60" : "text-neutral-400"}`}
+                        strokeWidth={2.5}
+                      />
+                      <span className={`text-sm ${plan.highlighted ? "text-white/70" : "text-neutral-600"}`}>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                {plan.planKey && plan.planKey !== "elite" ? (
+                  <button
+                    onClick={() => handleUpgrade(plan.planKey!)}
+                    disabled={isLoading || loading !== null}
+                    className={`w-full py-2.5 rounded-full text-sm font-semibold cursor-pointer transition-all inline-flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed ${
+                      plan.highlighted
+                        ? "bg-white text-neutral-900 hover:bg-neutral-100"
+                        : "bg-neutral-900 text-white hover:bg-neutral-700 border border-neutral-900"
+                    }`}
+                  >
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        Redirecting…
+                      </>
+                    ) : plan.cta}
+                  </button>
+                ) : (
+                  <Link
+                    href={plan.href ?? "/auth"}
+                    className={`w-full py-2.5 rounded-full text-sm font-semibold cursor-pointer transition-all inline-flex items-center justify-center ${
+                      plan.highlighted
+                        ? "bg-white text-neutral-900 hover:bg-neutral-100"
+                        : "bg-neutral-900 text-white hover:bg-neutral-700 border border-neutral-900"
+                    }`}
+                  >
+                    {plan.cta}
+                  </Link>
+                )}
+              </div>
+            );
+          })}
         </div>
 
         <div className="max-w-2xl mx-auto">
@@ -192,6 +243,7 @@ export default function UpgradePage() {
           </Link>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

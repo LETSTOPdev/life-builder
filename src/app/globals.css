@@ -117,6 +117,11 @@
   --sidebar-ring: oklch(0.4 0 0);
 }
 
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
 @keyframes aurora {
   from {
     background-position: 50% 50%, 50% 50%;
@@ -143,6 +148,7 @@
 
 @theme inline {
   --animate-aurora: aurora 60s linear infinite;
+  --animate-marquee: marquee 30s linear infinite;
   --animate-float-slow: float-slow 7s ease-in-out infinite;
   --animate-float-medium: float-medium 5s ease-in-out infinite;
   --animate-shimmer: shimmer 3s linear infinite;

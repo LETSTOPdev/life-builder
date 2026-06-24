@@ -65,7 +65,7 @@ export function Footer() {
         </div>
 
         <div className="border-t border-neutral-100 pt-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-neutral-400 text-xs">
-          <p>&copy; 2025 Buildr, Inc. All rights reserved.</p>
+          <p>&copy; 2026 Buildr, Inc. All rights reserved.</p>
           <p>Built for humans.</p>
         </div>
       </div>

@@ -2,19 +2,38 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, CheckCircle2, AlertCircle } from "lucide-react";
 import { Navbar } from "@/components/layout/navbar";
+import { Footer } from "@/components/layout/footer";
 import { motion } from "framer-motion";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
     setLoading(true);
-    setTimeout(() => { setLoading(false); setSent(true); }, 1200);
+    try {
+      const res = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error ?? "Something went wrong. Please try again.");
+        return;
+      }
+      setSent(true);
+    } catch {
+      setError("Network error. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -30,13 +49,20 @@ export default function ForgotPasswordPage() {
         >
           {!sent ? (
             <>
-              <Link href="/auth" className="inline-flex items-center gap-1.5 text-neutral-400 hover:text-neutral-700 text-xs mb-8 cursor-pointer transition-colors group">
+              <Link href="/auth/login" className="inline-flex items-center gap-1.5 text-neutral-400 hover:text-neutral-700 text-xs mb-8 cursor-pointer transition-colors group">
                 <ArrowLeft className="w-3 h-3 group-hover:-translate-x-0.5 transition-transform" />
                 Back to sign in
               </Link>
 
               <h1 className="text-2xl font-bold text-neutral-900 mb-2">Reset your password</h1>
               <p className="text-neutral-500 text-sm mb-8">Enter your email and we&apos;ll send a reset link.</p>
+
+              {error && (
+                <div role="alert" className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 rounded-xl mb-4">
+                  <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                  {error}
+                </div>
+              )}
 
               <form onSubmit={handleSubmit} className="space-y-3">
                 <input
@@ -50,9 +76,14 @@ export default function ForgotPasswordPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-neutral-900 text-white font-semibold py-3 rounded-full text-sm cursor-pointer hover:bg-neutral-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-neutral-900 text-white font-semibold py-3 rounded-full text-sm cursor-pointer hover:bg-neutral-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
-                  {loading ? "Sending..." : "Send Reset Link"}
+                  {loading ? (
+                    <>
+                      <span className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                      Sending…
+                    </>
+                  ) : "Send Reset Link"}
                 </button>
               </form>
             </>
@@ -65,13 +96,14 @@ export default function ForgotPasswordPage() {
               <p className="text-neutral-500 text-sm mb-6">
                 We sent a reset link to <span className="text-neutral-900">{email}</span>
               </p>
-              <Link href="/auth" className="text-neutral-400 hover:text-neutral-700 text-sm cursor-pointer transition-colors">
+              <Link href="/auth/login" className="text-neutral-400 hover:text-neutral-700 text-sm cursor-pointer transition-colors">
                 Back to sign in
               </Link>
             </div>
           )}
         </motion.div>
       </div>
+      <Footer />
     </div>
   );
 }

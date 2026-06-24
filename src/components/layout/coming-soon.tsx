@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Zap } from "lucide-react";
+import { Navbar } from "@/components/layout/navbar";
+import { Footer } from "@/components/layout/footer";
 
 interface ComingSoonProps {
   title: string;
@@ -9,18 +10,8 @@ interface ComingSoonProps {
 export function ComingSoon({ title, description }: ComingSoonProps) {
   return (
     <div className="min-h-screen bg-white text-neutral-900 flex flex-col">
-      <div className="px-6 py-4 border-b border-neutral-100 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 cursor-pointer">
-          <div className="w-6 h-6 rounded bg-neutral-900 flex items-center justify-center">
-            <Zap className="w-3 h-3 text-white" fill="white" />
-          </div>
-          <span className="text-neutral-900 font-semibold text-sm">Buildr</span>
-        </Link>
-        <Link href="/" className="text-neutral-400 hover:text-neutral-700 text-sm cursor-pointer transition-colors">
-          ← Back
-        </Link>
-      </div>
-      <div className="flex-1 flex flex-col items-center justify-center px-4 text-center">
+      <Navbar />
+      <div className="flex-1 flex flex-col items-center justify-center px-4 text-center py-20">
         <p className="text-neutral-400 text-xs font-medium tracking-widest uppercase mb-4">Coming Soon</p>
         <h1 className="text-3xl font-bold text-neutral-900 mb-3">{title}</h1>
         <p className="text-neutral-500 text-sm mb-8 max-w-sm">
@@ -33,6 +24,7 @@ export function ComingSoon({ title, description }: ComingSoonProps) {
           Back to Home
         </Link>
       </div>
+      <Footer />
     </div>
   );
 }

@@ -1,5 +1,5 @@
-import Link from "next/link";
-import { Zap } from "lucide-react";
+import { Navbar } from "@/components/layout/navbar";
+import { Footer } from "@/components/layout/footer";
 
 interface StaticShellProps {
   children: React.ReactNode;
@@ -8,21 +8,12 @@ interface StaticShellProps {
 
 export function StaticShell({ children, maxWidth = "max-w-2xl" }: StaticShellProps) {
   return (
-    <div className="min-h-screen bg-white text-neutral-900">
-      <div className="px-6 py-4 border-b border-neutral-100 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 cursor-pointer">
-          <div className="w-6 h-6 rounded bg-neutral-900 flex items-center justify-center">
-            <Zap className="w-3 h-3 text-white" fill="white" />
-          </div>
-          <span className="text-neutral-900 font-semibold text-sm">Buildr</span>
-        </Link>
-        <Link href="/" className="text-neutral-400 hover:text-neutral-700 text-sm cursor-pointer transition-colors">
-          ← Back
-        </Link>
-      </div>
-      <div className={`${maxWidth} mx-auto px-6 py-20`}>
+    <div className="min-h-screen bg-white text-neutral-900 flex flex-col">
+      <Navbar />
+      <div className={`flex-1 ${maxWidth} mx-auto px-6 pt-28 pb-20 w-full`}>
         {children}
       </div>
+      <Footer />
     </div>
   );
 }
