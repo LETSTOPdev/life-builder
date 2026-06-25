@@ -66,12 +66,14 @@ export default function CoachPage() {
         body: JSON.stringify({ message: text.trim() }),
       });
       const d = await r.json();
-      if (d.message) {
+      if (!r.ok) {
+        setMessages((prev) => [...prev, { id: Date.now().toString() + "e", role: "assistant", content: d.error ?? "Something went wrong. Please try again." }]);
+      } else if (d.message) {
         if (d.live !== undefined) setIsLive(d.live);
         setMessages((prev) => [...prev, { id: Date.now().toString() + "a", role: "assistant", content: d.message }]);
       }
     } catch {
-      setMessages((prev) => [...prev, { id: Date.now().toString() + "e", role: "assistant", content: "Connection error. Please try again." }]);
+      setMessages((prev) => [...prev, { id: Date.now().toString() + "e", role: "assistant", content: "Connection error. Please check your network and try again." }]);
     } finally {
       setIsTyping(false);
     }

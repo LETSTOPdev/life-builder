@@ -107,12 +107,16 @@ function DailyBig3() {
 export default function DashboardPage() {
   const [goals, setGoals] = useState<Goal[]>([]);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
-  const [name, setName] = useState("there");
-  const today = new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
-  const hour = new Date().getHours();
-  const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+  const [name, setName] = useState("");
+  const [today, setToday] = useState("");
+  const [greeting, setGreeting] = useState("");
 
   useEffect(() => {
+    const now = new Date();
+    setToday(now.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }));
+    const hour = now.getHours();
+    setGreeting(hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening");
+
     fetch("/api/goals?status=active")
       .then((r) => r.json())
       .then((d) => { if (d.goals) setGoals(d.goals.slice(0, 3)); })
@@ -147,8 +151,10 @@ export default function DashboardPage() {
     <div className="p-6 pb-24 lg:pb-6 max-w-5xl mx-auto">
       {/* Header */}
       <div className="mb-8 pt-2">
-        <p className="text-neutral-400 text-xs mb-1">{today}</p>
-        <h1 className="text-2xl font-bold text-neutral-900">{greeting}, {name}</h1>
+        <p className="text-neutral-400 text-xs mb-1 min-h-[1em]">{today}</p>
+        <h1 className="text-2xl font-bold text-neutral-900 min-h-[2rem]">
+          {greeting ? `${greeting}, ${name || "there"}` : ""}
+        </h1>
         <p className="text-neutral-500 text-sm mt-1">
           {analytics ? `${analytics.kpis.activeGoals} active goals · ${analytics.weeklyReview.focus}` : "Loading your dashboard…"}
         </p>

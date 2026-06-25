@@ -20,11 +20,11 @@ export const metadata: Metadata = {
   keywords: ["AI life coach", "goal setting", "productivity", "personal development", "habit tracking"],
   authors: [{ name: "Buildr" }],
   creator: "Buildr",
-  metadataBase: new URL("https://buildr.app"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "https://buildr.app"),
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://buildr.app",
+    url: process.env.NEXT_PUBLIC_APP_URL ?? "https://buildr.app",
     title: "Buildr — Build Your Best Life with AI",
     description: "Your AI-powered life operating system.",
     siteName: "Buildr",

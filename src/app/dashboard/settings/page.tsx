@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Check, Eye, EyeOff, AlertCircle } from "lucide-react";
 import Link from "next/link";
+import { toast } from "sonner";
 
 type Tab = "profile" | "notifications" | "subscription" | "password" | "privacy";
 const tabs: Tab[] = ["profile", "notifications", "subscription", "password", "privacy"];
@@ -36,6 +37,8 @@ export default function SettingsPage() {
   });
   const [showCurrentPw, setShowCurrentPw] = useState(false);
   const [showNewPw, setShowNewPw] = useState(false);
+  const [currentPw, setCurrentPw] = useState("");
+  const [newPw, setNewPw] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -48,6 +51,47 @@ export default function SettingsPage() {
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
+
+  const handleChangePassword = async () => {
+    if (!currentPw || !newPw) { toast.error("Please fill in both password fields"); return; }
+    setSaving(true);
+    try {
+      const r = await fetch("/api/user/change-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ currentPassword: currentPw, newPassword: newPw }),
+      });
+      const d = await r.json();
+      if (!r.ok) { toast.error(d.error ?? "Failed to update password"); return; }
+      toast.success("Password updated successfully");
+      setCurrentPw("");
+      setNewPw("");
+    } catch { toast.error("Network error. Please try again."); }
+    finally { setSaving(false); }
+  };
+
+  const handleExportData = () => {
+    window.location.href = "/api/user/export";
+  };
+
+  const handleDeleteGoals = async () => {
+    if (!confirm("Delete all goal data? This cannot be undone.")) return;
+    try {
+      const r = await fetch("/api/user/delete?scope=goals", { method: "DELETE" });
+      const d = await r.json();
+      if (!r.ok) { toast.error(d.error ?? "Failed to delete goals"); return; }
+      toast.success("All goal data deleted");
+    } catch { toast.error("Network error. Please try again."); }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!confirm("Permanently delete your account and all data? This cannot be undone.")) return;
+    try {
+      const r = await fetch("/api/user/delete?scope=account", { method: "DELETE" });
+      if (!r.ok) { toast.error("Failed to delete account"); return; }
+      window.location.href = "/";
+    } catch { toast.error("Network error. Please try again."); }
+  };
 
   const handleSaveProfile = async () => {
     if (!profile) return;
@@ -227,28 +271,45 @@ export default function SettingsPage() {
         <div className="bg-white border border-neutral-200 rounded-xl p-5">
           <h2 className="text-neutral-900 font-medium text-sm mb-5">Change Password</h2>
           <div className="space-y-4">
-            {[
-              { label: "Current password", show: showCurrentPw, toggle: () => setShowCurrentPw((p) => !p) },
-              { label: "New password", show: showNewPw, toggle: () => setShowNewPw((p) => !p) },
-            ].map(({ label, show, toggle }) => (
-              <div key={label}>
-                <label className="text-neutral-500 text-xs block mb-1.5">{label}</label>
-                <div className="relative">
-                  <input
-                    type={show ? "text" : "password"}
-                    className="w-full bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2.5 text-neutral-900 text-sm focus:outline-none focus:border-neutral-400 transition-colors pr-10"
-                  />
-                  <button onClick={toggle} className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700 cursor-pointer">
-                    {show ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
+            <div>
+              <label className="text-neutral-500 text-xs block mb-1.5">Current password</label>
+              <div className="relative">
+                <input
+                  type={showCurrentPw ? "text" : "password"}
+                  value={currentPw}
+                  onChange={(e) => setCurrentPw(e.target.value)}
+                  className="w-full bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2.5 text-neutral-900 text-sm focus:outline-none focus:border-neutral-400 transition-colors pr-10"
+                  placeholder="Current password"
+                />
+                <button onClick={() => setShowCurrentPw((p) => !p)} className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700 cursor-pointer">
+                  {showCurrentPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
-            ))}
+            </div>
+            <div>
+              <label className="text-neutral-500 text-xs block mb-1.5">New password</label>
+              <div className="relative">
+                <input
+                  type={showNewPw ? "text" : "password"}
+                  value={newPw}
+                  onChange={(e) => setNewPw(e.target.value)}
+                  className="w-full bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2.5 text-neutral-900 text-sm focus:outline-none focus:border-neutral-400 transition-colors pr-10"
+                  placeholder="New password"
+                />
+                <button onClick={() => setShowNewPw((p) => !p)} className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700 cursor-pointer">
+                  {showNewPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
             <p className="text-neutral-400 text-xs">Minimum 8 characters, one uppercase, one number.</p>
           </div>
           <div className="mt-5 flex justify-end">
-            <button className="flex items-center gap-2 bg-neutral-900 text-white text-xs font-medium px-4 py-2 rounded-full hover:bg-neutral-700 transition-colors cursor-pointer">
-              Update password
+            <button
+              onClick={handleChangePassword}
+              disabled={saving}
+              className="flex items-center gap-2 bg-neutral-900 text-white text-xs font-medium px-4 py-2 rounded-full hover:bg-neutral-700 transition-colors cursor-pointer disabled:opacity-50"
+            >
+              {saving ? "Updating…" : "Update password"}
             </button>
           </div>
         </div>
@@ -259,8 +320,8 @@ export default function SettingsPage() {
           <div className="bg-white border border-neutral-200 rounded-xl p-5">
             <h2 className="text-neutral-900 font-medium text-sm mb-4">Privacy</h2>
             <div className="space-y-3">
-              <button className="w-full text-left text-neutral-500 text-sm py-2 hover:text-neutral-900 transition-colors cursor-pointer">Export my data →</button>
-              <Link href="#" className="block text-neutral-500 text-sm py-2 hover:text-neutral-900 transition-colors">Privacy policy →</Link>
+              <button onClick={handleExportData} className="w-full text-left text-neutral-500 text-sm py-2 hover:text-neutral-900 transition-colors cursor-pointer">Export my data →</button>
+              <Link href="/privacy" className="block text-neutral-500 text-sm py-2 hover:text-neutral-900 transition-colors">Privacy policy →</Link>
             </div>
           </div>
           <div className="bg-white border border-red-200 rounded-xl p-5">
@@ -272,8 +333,8 @@ export default function SettingsPage() {
               </div>
             </div>
             <div className="space-y-2">
-              <button className="w-full text-left text-red-400 hover:text-red-600 text-sm py-2 transition-colors cursor-pointer">Delete all goal data</button>
-              <button className="w-full text-left text-red-400 hover:text-red-600 text-sm py-2 transition-colors cursor-pointer">Delete account</button>
+              <button onClick={handleDeleteGoals} className="w-full text-left text-red-400 hover:text-red-600 text-sm py-2 transition-colors cursor-pointer">Delete all goal data</button>
+              <button onClick={handleDeleteAccount} className="w-full text-left text-red-400 hover:text-red-600 text-sm py-2 transition-colors cursor-pointer">Delete account</button>
             </div>
           </div>
         </div>

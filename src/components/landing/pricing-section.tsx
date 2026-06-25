@@ -43,8 +43,8 @@ const plans = [
   },
   {
     name: "Premium",
-    monthlyPrice: 39,
-    annualPrice: 32,
+    monthlyPrice: 49,
+    annualPrice: 39,
     description: "Deep personalization.",
     planKey: "premium",
     features: [
@@ -60,8 +60,8 @@ const plans = [
   },
   {
     name: "Elite",
-    monthlyPrice: 99,
-    annualPrice: 79,
+    monthlyPrice: 149,
+    annualPrice: 119,
     description: "For teams and orgs.",
     planKey: null,
     features: [

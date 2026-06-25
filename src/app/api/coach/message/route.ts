@@ -51,16 +51,21 @@ Be direct, specific, and motivating. Keep responses concise (2-4 sentences). Dra
   let replyContent: string;
 
   if (client) {
-    const response = await client.messages.create({
-      model: "claude-haiku-4-5-20251001",
-      max_tokens: 400,
-      system: systemPrompt,
-      messages: [
-        ...history.map((m) => ({ role: m.role as "user" | "assistant", content: m.content })),
-        { role: "user", content: message.trim() },
-      ],
-    });
-    replyContent = (response.content[0] as { text: string }).text;
+    try {
+      const response = await client.messages.create({
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 400,
+        system: systemPrompt,
+        messages: [
+          ...history.map((m) => ({ role: m.role as "user" | "assistant", content: m.content })),
+          { role: "user", content: message.trim() },
+        ],
+      });
+      replyContent = (response.content[0] as { text: string }).text;
+    } catch (err) {
+      console.error("Anthropic API error:", err);
+      return errorResponse("AI coaching is temporarily unavailable. Please try again shortly.", 503);
+    }
   } else {
     const fallbacks = [
       `Great question. Looking at your progress — ${goals[0] ? `${goals[0].title} at ${goals[0].progress}%` : "your goals"} — consistency is what separates people who succeed from those who don't. What's one small action you can take today?`,

@@ -3,6 +3,13 @@ import { SignJWT, jwtVerify } from "jose";
 import { getDb } from "./db";
 import { randomUUID } from "crypto";
 
+if (process.env.NODE_ENV === "production" && !process.env.AUTH_SECRET) {
+  throw new Error(
+    "AUTH_SECRET environment variable must be set in production. " +
+    "Generate one with: openssl rand -base64 32"
+  );
+}
+
 const SECRET = new TextEncoder().encode(
   process.env.AUTH_SECRET ?? "buildr-dev-secret-change-in-production"
 );
