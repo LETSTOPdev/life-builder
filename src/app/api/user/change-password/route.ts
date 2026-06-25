@@ -22,6 +22,11 @@ export async function POST(req: NextRequest) {
   const user = db.prepare("SELECT password FROM users WHERE id = ?").get(session!.sub) as { password: string } | undefined;
   if (!user) return errorResponse("User not found", 404);
 
+  // Google OAuth users have a non-bcrypt sentinel — they cannot set a password this way
+  if (user.password.startsWith("oauth_google_")) {
+    return errorResponse("Your account uses Google Sign-In. Password changes are not available for Google accounts.", 400);
+  }
+
   const valid = await bcrypt.compare(currentPassword, user.password);
   if (!valid) return errorResponse("Current password is incorrect", 401);
 

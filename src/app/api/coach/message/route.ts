@@ -56,8 +56,6 @@ export async function POST(req: NextRequest) {
     "SELECT role, content FROM coach_messages WHERE user_id = ? ORDER BY created_at ASC LIMIT 20"
   ).all(userId) as { role: string; content: string }[];
 
-  db.prepare("INSERT INTO coach_messages (id, user_id, role, content) VALUES (?, ?, ?, ?)").run(newId(), userId, "user", message.trim());
-
   const systemPrompt = `You are a personal life coach inside Buildr, an AI-powered personal development app.
 
 User: ${user?.name ?? session!.name}
@@ -67,7 +65,16 @@ ${goals.map((g) => `- ${g.title} (${g.category}): ${g.progress}% complete, ${g.d
 
 Be direct, specific, and motivating. Keep responses concise (2-4 sentences). Draw on the user's actual goals. No fluff.`;
 
+  const fallbacks = [
+    `Great question. Looking at your progress — ${goals[0] ? `${goals[0].title} at ${goals[0].progress}%` : "your goals"} — consistency is what separates people who succeed from those who don't. What's one small action you can take today?`,
+    "The data shows your best days are when you start with your hardest task. What's the thing you've been avoiding that would move the needle most?",
+    "Progress isn't linear. The fact you're here asking means you're still in the game. Break today's goal into 25-minute focused blocks.",
+    "Your streak matters more than any single day. Protect it — even 5 minutes counts toward maintaining momentum.",
+    "You're building identity, not just habits. Ask yourself: what would the person who already achieved this goal do right now?",
+  ];
+
   let replyContent: string;
+  let isLive = false;
 
   if (client) {
     try {
@@ -81,22 +88,18 @@ Be direct, specific, and motivating. Keep responses concise (2-4 sentences). Dra
         ],
       });
       replyContent = (response.content[0] as { text: string }).text;
+      isLive = true;
     } catch (err) {
-      console.error("Anthropic API error:", err);
-      return errorResponse("AI coaching is temporarily unavailable. Please try again shortly.", 503);
+      console.error("Anthropic API error — falling back to static coaching:", err);
+      replyContent = fallbacks[Math.floor(Math.random() * fallbacks.length)];
     }
   } else {
-    const fallbacks = [
-      `Great question. Looking at your progress — ${goals[0] ? `${goals[0].title} at ${goals[0].progress}%` : "your goals"} — consistency is what separates people who succeed from those who don't. What's one small action you can take today?`,
-      "The data shows your best days are when you start with your hardest task. What's the thing you've been avoiding that would move the needle most?",
-      "Progress isn't linear. The fact you're here asking means you're still in the game. Break today's goal into 25-minute focused blocks.",
-      "Your streak matters more than any single day. Protect it — even 5 minutes counts toward maintaining momentum.",
-      "You're building identity, not just habits. Ask yourself: what would the person who already achieved this goal do right now?",
-    ];
     replyContent = fallbacks[Math.floor(Math.random() * fallbacks.length)];
   }
 
+  // Only persist after we have a valid reply (avoids orphaned user messages on DB)
+  db.prepare("INSERT INTO coach_messages (id, user_id, role, content) VALUES (?, ?, ?, ?)").run(newId(), userId, "user", message.trim());
   db.prepare("INSERT INTO coach_messages (id, user_id, role, content) VALUES (?, ?, ?, ?)").run(newId(), userId, "assistant", replyContent);
 
-  return jsonResponse({ message: replyContent, live: Boolean(client) });
+  return jsonResponse({ message: replyContent, live: isLive });
 }

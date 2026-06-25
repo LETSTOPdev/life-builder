@@ -77,6 +77,7 @@ export default function JournalPage() {
   }
 
   async function handleDelete(id: string) {
+    if (!confirm("Delete this journal entry? This cannot be undone.")) return;
     try {
       await fetch(`/api/journal/${id}`, { method: "DELETE" });
       setEntries((prev) => prev.filter((e) => e.id !== id));

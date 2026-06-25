@@ -48,7 +48,7 @@ export function Sidebar() {
   return (
     <aside className="hidden lg:flex flex-col w-56 bg-white border-r border-neutral-100 h-screen sticky top-0">
       <div className="px-4 py-4 border-b border-neutral-100">
-        <Link href="/" className="flex items-center gap-2 cursor-pointer">
+        <Link href="/dashboard" className="flex items-center gap-2 cursor-pointer">
           <div className="w-6 h-6 rounded bg-neutral-900 flex items-center justify-center">
             <Zap className="w-3 h-3 text-white" fill="white" />
           </div>

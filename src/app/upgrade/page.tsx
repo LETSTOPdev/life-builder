@@ -98,7 +98,11 @@ export default function UpgradePage() {
       const data = await res.json();
 
       if (!res.ok) {
-        toast.error(data.error ?? "Could not start checkout. Please try again.");
+        if (res.status === 503) {
+          toast.error("Payments are coming soon! We're setting up billing — check back shortly.");
+        } else {
+          toast.error(data.error ?? "Could not start checkout. Please try again.");
+        }
         return;
       }
 

@@ -70,6 +70,7 @@ export default function GoalsPage() {
   }
 
   async function handleDelete(id: string) {
+    if (!confirm("Delete this goal? This cannot be undone.")) return;
     try {
       await fetch(`/api/goals/${id}`, { method: "DELETE" });
       setGoals((prev) => prev.filter((g) => g.id !== id));
@@ -196,6 +197,7 @@ export default function GoalsPage() {
                   onChange={(e) => setGoals((prev) => prev.map((g) => g.id === goal.id ? { ...g, progress: Number(e.target.value) } : g))}
                   onMouseUp={(e) => handleProgressChange(goal.id, Number((e.target as HTMLInputElement).value))}
                   onTouchEnd={(e) => handleProgressChange(goal.id, Number((e.target as HTMLInputElement).value))}
+                  onBlur={(e) => handleProgressChange(goal.id, Number((e.target as HTMLInputElement).value))}
                   className="w-full h-1 bg-transparent appearance-none cursor-pointer [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-neutral-900 [&::-webkit-slider-thumb]:appearance-none"
                 />
               </div>
