@@ -1,11 +1,12 @@
 import { NextRequest } from "next/server";
 import bcrypt from "bcryptjs";
 import { getDb } from "@/lib/db";
-import { signToken, seedDemoUser, jsonResponse, errorResponse } from "@/lib/auth";
+import { signToken, jsonResponse, errorResponse } from "@/lib/auth";
+
+const SECURE = process.env.NODE_ENV === "production" ? "; Secure" : "";
 
 export async function POST(req: NextRequest) {
   try {
-    await seedDemoUser();
     const { email, password } = await req.json();
 
     if (!email || !password) return errorResponse("Email and password required");
@@ -28,7 +29,7 @@ export async function POST(req: NextRequest) {
       user: { id: user.id, email: user.email, name: user.name, plan: user.plan },
       token,
     });
-    res.headers.set("Set-Cookie", `buildr_session=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=604800`);
+    res.headers.set("Set-Cookie", `buildr_session=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=604800${SECURE}`);
     return res;
   } catch (e) {
     console.error(e);

@@ -42,10 +42,11 @@ export async function POST(req: NextRequest) {
       plan: user.plan,
     });
 
+    const secure = process.env.NODE_ENV === "production" ? "; Secure" : "";
     const res = jsonResponse({ message: "Password reset successfully." });
     res.headers.set(
       "Set-Cookie",
-      `buildr_session=${sessionToken}; Path=/; HttpOnly; SameSite=Lax; Max-Age=604800`
+      `buildr_session=${sessionToken}; Path=/; HttpOnly; SameSite=Lax; Max-Age=604800${secure}`
     );
     return res;
   } catch (e) {

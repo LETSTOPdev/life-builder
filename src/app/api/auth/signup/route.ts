@@ -34,8 +34,9 @@ export async function POST(req: NextRequest) {
     ).run(newId(), userId);
 
     const token = await signToken({ sub: userId, email: email.toLowerCase(), name: name.trim(), plan: "free" });
+    const secure = process.env.NODE_ENV === "production" ? "; Secure" : "";
     const res = jsonResponse({ message: "Account created", userId }, 201);
-    res.headers.set("Set-Cookie", `buildr_session=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=604800`);
+    res.headers.set("Set-Cookie", `buildr_session=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=604800${secure}`);
     return res;
   } catch (e) {
     console.error(e);

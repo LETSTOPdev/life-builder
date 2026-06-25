@@ -2,7 +2,9 @@ import Database from "better-sqlite3";
 import path from "path";
 import fs from "fs";
 
-const DB_DIR = path.join(process.cwd(), "data");
+// RAILWAY_VOLUME_MOUNT_PATH is set automatically when a Railway Volume is attached.
+// Falls back to ./data for local development.
+const DB_DIR = process.env.RAILWAY_VOLUME_MOUNT_PATH ?? path.join(process.cwd(), "data");
 const DB_PATH = path.join(DB_DIR, "buildr.db");
 
 let _db: Database.Database | null = null;
