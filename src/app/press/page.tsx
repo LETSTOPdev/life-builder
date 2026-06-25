@@ -1,6 +1,12 @@
 import { StaticShell, StaticHeading } from "@/components/layout/static-shell";
 import { ArrowRight, Download } from "lucide-react";
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Press",
+  description: "Press resources, media kit, and coverage of Buildr. For journalists and content creators.",
+};
 
 const coverage = [
   {

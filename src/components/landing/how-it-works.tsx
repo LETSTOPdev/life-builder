@@ -101,7 +101,7 @@ export function HowItWorksSection() {
             <p className="text-neutral-500 text-sm mt-1">Answer 5 questions. Get your roadmap in 60 seconds.</p>
           </div>
           <a
-            href="/auth"
+            href="/auth/signup"
             className="flex-shrink-0 bg-neutral-900 text-white text-sm font-medium px-6 py-2.5 rounded-full hover:bg-neutral-700 transition-colors"
           >
             Start for free

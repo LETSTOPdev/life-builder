@@ -65,7 +65,7 @@ export function FeaturesSection() {
             <h2 className="text-4xl sm:text-5xl font-bold text-neutral-900 leading-tight tracking-tight max-w-xl">
               Your complete life<br />operating system
             </h2>
-            <Link href="/auth" className="hidden sm:inline-flex items-center gap-2 text-neutral-500 hover:text-neutral-900 text-sm transition-colors border-b border-neutral-200 hover:border-neutral-500 pb-px">
+            <Link href="/auth/signup" className="hidden sm:inline-flex items-center gap-2 text-neutral-500 hover:text-neutral-900 text-sm transition-colors border-b border-neutral-200 hover:border-neutral-500 pb-px">
               Get started free <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>

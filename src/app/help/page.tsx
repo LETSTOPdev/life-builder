@@ -1,6 +1,12 @@
 import { StaticShell, StaticHeading } from "@/components/layout/static-shell";
 import Link from "next/link";
 import { ArrowRight, MessageCircle, CreditCard, Settings, Lock, Zap } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Help Center",
+  description: "Answers to common questions about getting started, billing, privacy, and Buildr features.",
+};
 
 const categories = [
   { icon: Zap, label: "Getting Started", href: "#getting-started" },

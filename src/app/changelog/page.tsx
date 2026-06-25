@@ -1,4 +1,10 @@
 import { StaticShell, StaticHeading } from "@/components/layout/static-shell";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Changelog",
+  description: "What's new in Buildr — features shipped, improvements made, bugs fixed.",
+};
 
 const entries = [
   {

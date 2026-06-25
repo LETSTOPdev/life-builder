@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
+import { CookieBanner } from "@/components/ui/cookie-banner";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -46,6 +47,7 @@ export default function RootLayout({
       <body className="font-sans antialiased bg-white text-neutral-900 min-h-screen">
         {children}
         <Toaster position="bottom-right" theme="light" />
+        <CookieBanner />
       </body>
     </html>
   );

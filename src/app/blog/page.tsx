@@ -1,4 +1,10 @@
 import { StaticShell, StaticHeading } from "@/components/layout/static-shell";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Blog",
+  description: "Insights on goals, AI coaching, and building a better life — from the Buildr team.",
+};
 
 const posts = [
   {
@@ -53,7 +59,7 @@ const posts = [
 ];
 
 export default function BlogPage() {
-  const [featured, ...rest] = posts.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+  const [featured, ...rest] = [...posts].sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
 
   return (
     <StaticShell maxWidth="max-w-3xl">

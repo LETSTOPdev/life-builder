@@ -6,9 +6,9 @@ import { motion, AnimatePresence, useScroll, useTransform, useSpring, useMotionV
 import { ArrowRight } from "lucide-react";
 import { AuroraLights } from "@/components/ui/aurora-lights";
 
-// ─── Rotating career outcomes (slot-machine style) ───────────────────────────
+// ─── Rotating life outcomes (slot-machine style) ─────────────────────────────
 
-const ROLES = ["AI Engineer", "Product Lead", "Founder", "Data Scientist", "UX Director"];
+const ROLES = ["life", "habits", "goals", "career", "future"];
 
 function SlotWord() {
   const [index, setIndex] = useState(0);
@@ -29,7 +29,7 @@ function SlotWord() {
           animate={{ y: "0%", opacity: 1 }}
           exit={{ y: "-105%", opacity: 0 }}
           transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
-          className="block text-[#0070f3]"
+          className="block text-[#0070f3] italic"
         >
           {ROLES[index]}
         </motion.span>
@@ -80,32 +80,32 @@ function ProductCard() {
           <div className="flex-1 mx-4 flex justify-center">
             <span className="flex items-center gap-1.5 bg-white border border-neutral-200 rounded px-3 py-0.5 text-[11px] text-neutral-400 font-mono">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
-              app.buildr.io/roadmap
+              app.buildr.io/dashboard
             </span>
           </div>
         </div>
 
         {/* Dashboard */}
         <div className="bg-white p-5 grid grid-cols-5 gap-4">
-          {/* Sidebar */}
+          {/* Sidebar — Daily Big 3 */}
           <div className="col-span-2 space-y-3">
-            <div className="rounded-xl border border-neutral-100 p-4 bg-neutral-50">
-              <p className="text-[10px] uppercase tracking-widest text-neutral-400 mb-1">Match score</p>
-              <p className="text-3xl font-bold text-neutral-900 leading-none">94%</p>
-              <p className="text-xs text-neutral-500 mt-1">AI Engineer path</p>
-              <div className="mt-2.5 h-1.5 bg-neutral-100 rounded-full overflow-hidden">
+            <div className="rounded-xl border border-neutral-100 p-4 bg-neutral-900">
+              <p className="text-[10px] uppercase tracking-widest text-neutral-400 mb-1">Daily Big 3</p>
+              <p className="text-3xl font-bold text-white leading-none">2/3</p>
+              <p className="text-xs text-neutral-400 mt-1">done today</p>
+              <div className="mt-2.5 h-1 bg-white/10 rounded-full overflow-hidden">
                 <motion.div
-                  className="h-full rounded-full bg-[#0070f3]"
+                  className="h-full rounded-full bg-white"
                   initial={{ width: 0 }}
-                  animate={{ width: "94%" }}
+                  animate={{ width: "66%" }}
                   transition={{ delay: 1.3, duration: 1.2, ease: "easeOut" }}
                 />
               </div>
             </div>
             {[
-              { k: "Salary jump", v: "+$62k/yr" },
-              { k: "Time to role", v: "14 months" },
-              { k: "Skills gap", v: "3 courses" },
+              { k: "Day streak", v: "14 🔥" },
+              { k: "Goals active", v: "4" },
+              { k: "Avg progress", v: "68%" },
             ].map(s => (
               <div key={s.k} className="rounded-xl border border-neutral-100 px-3.5 py-3 bg-neutral-50">
                 <p className="text-[10px] text-neutral-400 mb-0.5">{s.k}</p>
@@ -114,21 +114,21 @@ function ProductCard() {
             ))}
           </div>
 
-          {/* Roadmap */}
+          {/* Goals */}
           <div className="col-span-3 rounded-xl border border-neutral-100 p-4 bg-neutral-50">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <p className="text-[10px] uppercase tracking-widest text-neutral-400">Roadmap · Phase 1/3</p>
-                <p className="text-sm font-semibold text-neutral-800 mt-0.5">AI Engineer</p>
+                <p className="text-[10px] uppercase tracking-widest text-neutral-400">Active Goals</p>
+                <p className="text-sm font-semibold text-neutral-800 mt-0.5">Q3 Focus</p>
               </div>
               <span className="text-[10px] font-medium text-emerald-600 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-full">On track</span>
             </div>
             <div className="space-y-3">
               {[
-                { label: "Python for Data Science", pct: 100 },
-                { label: "ML Fundamentals", pct: 100 },
-                { label: "Deep Learning", pct: 43 },
-                { label: "MLOps & Deployment", pct: 0 },
+                { label: "Launch side project", pct: 100 },
+                { label: "Read 12 books this year", pct: 75 },
+                { label: "Morning workout habit", pct: 58 },
+                { label: "Learn Spanish (B1)", pct: 22 },
               ].map((m, i) => (
                 <motion.div
                   key={m.label}
@@ -173,11 +173,11 @@ function useMotionValueXY() {
 // ─── Live proof strip ─────────────────────────────────────────────────────────
 
 const PROOF = [
-  "Priya pivoted to AI Engineering in 7 months",
-  "Marcus reached $50k MRR with his SaaS",
-  "Sofia became Director of Product at 28",
-  "Jordan landed a Google PM offer",
-  "Alex built a $200k/yr freelance business",
+  "Emily hit a 90-day goal streak last month",
+  "Marcus finally launched his side project",
+  "Sofia built a morning routine that actually sticks",
+  "Jordan lost 20 lbs following her Buildr plan",
+  "Alex went from burnout to balanced in 8 weeks",
 ];
 
 function ProofStrip() {
@@ -229,7 +229,7 @@ export function HeroSection() {
           transition={{ duration: 0.5 }}
           className="text-xs uppercase tracking-[0.18em] text-neutral-400 font-medium mb-10"
         >
-          AI Career Platform
+          AI Life Operating System
         </motion.p>
 
         {/* Headline */}
@@ -241,7 +241,7 @@ export function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
             >
-              Your roadmap to
+              Build the
             </motion.span>
             <motion.span
               className="flex items-baseline gap-3 flex-wrap"
@@ -249,7 +249,6 @@ export function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.22, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
             >
-              becoming a
               <SlotWord />
             </motion.span>
             <motion.span
@@ -258,7 +257,7 @@ export function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.34, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
             >
-              starts here.
+              you imagined.
             </motion.span>
           </h1>
 
@@ -269,9 +268,9 @@ export function HeroSection() {
             transition={{ delay: 0.52, duration: 0.6, ease: "easeOut" }}
             className="mt-8 text-xl text-neutral-500 max-w-xl leading-relaxed font-normal"
           >
-            Answer five questions. Get a personalized career path,
-            skill-gap analysis, and daily action plan — built by AI,
-            tailored to you.
+            Set meaningful goals, track daily wins, and get personalized
+            AI coaching — your personal operating system for becoming
+            the best version of yourself.
           </motion.p>
 
           {/* CTAs */}
@@ -281,7 +280,7 @@ export function HeroSection() {
             transition={{ delay: 0.66, duration: 0.55 }}
             className="mt-10 flex items-center gap-5"
           >
-            <Link href="/auth">
+            <Link href="/auth/signup">
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -291,7 +290,7 @@ export function HeroSection() {
                 <ArrowRight className="w-4 h-4 transition-transform duration-150 group-hover:translate-x-0.5" />
               </motion.button>
             </Link>
-            <Link href="#how-it-works" className="text-sm font-medium text-neutral-500 hover:text-neutral-800 transition-colors border-b border-neutral-200 hover:border-neutral-500 pb-px">
+            <Link href="/#how-it-works" className="text-sm font-medium text-neutral-500 hover:text-neutral-800 transition-colors border-b border-neutral-200 hover:border-neutral-500 pb-px">
               See how it works
             </Link>
           </motion.div>
@@ -316,7 +315,7 @@ export function HeroSection() {
                 ))}
               </div>
               <p className="text-sm text-neutral-500">
-                <strong className="text-neutral-800 font-semibold">12,400+</strong> paths mapped
+                <strong className="text-neutral-800 font-semibold">12,400+</strong> goals achieved
               </p>
             </div>
 

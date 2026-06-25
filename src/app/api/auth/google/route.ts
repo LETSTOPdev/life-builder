@@ -1,16 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { randomBytes } from "crypto";
 
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   const clientId = process.env.GOOGLE_CLIENT_ID;
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+
   if (!clientId) {
-    return NextResponse.redirect(
-      new URL("/auth/login?error=google_not_configured", req.url)
-    );
+    return NextResponse.redirect(`${appUrl}/auth/login?error=google_not_configured`);
   }
 
   const state = randomBytes(16).toString("hex");
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
   const redirectUri = `${appUrl}/api/auth/google/callback`;
 
   const params = new URLSearchParams({

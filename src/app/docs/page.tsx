@@ -1,6 +1,12 @@
 import { StaticShell, StaticHeading } from "@/components/layout/static-shell";
 import Link from "next/link";
 import { ArrowRight, Terminal, Key, Webhook, BookOpen, Zap, Shield } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "API Docs",
+  description: "REST API reference for integrating Buildr into your own tools and workflows.",
+};
 
 const sections = [
   {

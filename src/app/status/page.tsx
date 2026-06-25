@@ -1,4 +1,10 @@
 import { StaticShell, StaticHeading } from "@/components/layout/static-shell";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Status",
+  description: "Live status and uptime for all Buildr services. Incident history and response times.",
+};
 
 const services = [
   { name: "Web App", status: "Operational", latency: "84ms" },

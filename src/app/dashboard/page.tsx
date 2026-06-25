@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Progress } from "@/components/ui/progress";
-import { Target, Flame, CheckCircle2, Sparkles, ArrowRight, Clock, Circle } from "lucide-react";
+import { Target, Flame, CheckCircle2, Sparkles, ArrowRight, Clock } from "lucide-react";
 import Link from "next/link";
 
 interface Goal {

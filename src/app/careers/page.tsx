@@ -1,6 +1,12 @@
 import { StaticShell, StaticHeading } from "@/components/layout/static-shell";
 import Link from "next/link";
 import { ArrowRight, MapPin, Clock } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Careers",
+  description: "Join the Buildr team and help people build better lives with AI. See open roles.",
+};
 
 const openRoles = [
   {

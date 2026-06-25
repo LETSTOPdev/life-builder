@@ -20,15 +20,15 @@ export function CTASection() {
             Get started today
           </p>
           <h2 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-neutral-900 tracking-tight leading-[1.05] mb-8 max-w-2xl">
-            Know exactly what to do next.
+            Start building the life you want.
           </h2>
           <p className="text-neutral-500 text-lg mb-10 max-w-md leading-relaxed">
-            For the first time, have a personalized roadmap that evolves with you every single day.
+            Set goals, get AI coaching, track your wins. Buildr becomes smarter about you every single day.
           </p>
 
           <div className="flex flex-col sm:flex-row items-start gap-4">
             <Link
-              href="/auth"
+              href="/auth/signup"
               className="group inline-flex items-center gap-2 bg-neutral-900 text-white text-sm font-semibold px-7 py-3.5 rounded-full hover:bg-neutral-700 transition-colors"
             >
               Start free

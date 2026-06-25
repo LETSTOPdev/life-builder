@@ -1,4 +1,10 @@
 import { StaticShell, StaticHeading } from "@/components/layout/static-shell";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Roadmap",
+  description: "See what Buildr is building next — upcoming features, improvements, and our product vision.",
+};
 
 const quarters = [
   {
