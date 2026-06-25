@@ -1,6 +1,10 @@
 import { NextRequest } from "next/server";
 import { getDb } from "@/lib/db";
 import { getSession, requireSession, newId, jsonResponse, errorResponse } from "@/lib/auth";
+import { getLimits } from "@/lib/plan-limits";
+
+const VALID_CATEGORIES = ["Health", "Career", "Learning", "Finance", "Relationships", "Mindset", "Other"] as const;
+const VALID_STATUSES = ["active", "completed", "paused"] as const;
 
 function rowToGoal(row: Record<string, unknown>) {
   return {
@@ -32,6 +36,10 @@ export async function GET(req: NextRequest) {
   const params: unknown[] = [session!.sub];
 
   if (status !== "all") {
+    // Only allow valid status values in the query param
+    if (!VALID_STATUSES.includes(status as typeof VALID_STATUSES[number])) {
+      return errorResponse("Invalid status filter");
+    }
     query += " AND status = ?";
     params.push(status);
   }
@@ -51,19 +59,45 @@ export async function POST(req: NextRequest) {
   if (guard) return guard;
 
   const body = await req.json();
-  const { title, description = "", category = "Other", daysLeft, progress = 0 } = body;
+  const { title, description = "", category = "Other", daysLeft } = body;
 
+  // Input validation
   if (!title || typeof title !== "string" || title.trim().length < 2)
     return errorResponse("Title must be at least 2 characters");
-  if (!daysLeft || typeof daysLeft !== "number" || daysLeft < 1)
-    return errorResponse("daysLeft must be a positive number");
+  if (title.trim().length > 200)
+    return errorResponse("Title must be under 200 characters");
+  if (typeof description !== "string" || description.length > 1000)
+    return errorResponse("Description must be under 1000 characters");
+  if (!VALID_CATEGORIES.includes(category))
+    return errorResponse(`Category must be one of: ${VALID_CATEGORIES.join(", ")}`);
+  if (!daysLeft || typeof daysLeft !== "number" || daysLeft < 1 || daysLeft > 3650)
+    return errorResponse("daysLeft must be between 1 and 3650");
 
   const db = getDb();
-  const id = newId();
-  db.prepare(
-    "INSERT INTO goals (id, user_id, title, description, category, days_left, progress) VALUES (?, ?, ?, ?, ?, ?, ?)"
-  ).run(id, session!.sub, title.trim(), description, category, daysLeft, progress);
 
-  const goal = rowToGoal(db.prepare("SELECT * FROM goals WHERE id = ?").get(id) as Record<string, unknown>);
+  // Plan limit: free users max 3 active goals
+  const user = db.prepare("SELECT plan FROM users WHERE id = ?").get(session!.sub) as { plan: string } | undefined;
+  const limits = getLimits(user?.plan ?? "free");
+
+  if (limits.maxActiveGoals !== Infinity) {
+    const activeCount = (db.prepare(
+      "SELECT COUNT(*) as count FROM goals WHERE user_id = ? AND status = 'active'"
+    ).get(session!.sub) as { count: number }).count;
+
+    if (activeCount >= limits.maxActiveGoals) {
+      return errorResponse(
+        `Free plan is limited to ${limits.maxActiveGoals} active goals. Upgrade to Pro for unlimited goals.`,
+        403
+      );
+    }
+  }
+
+  const id = newId();
+  // progress always starts at 0 — never accept from client on creation
+  db.prepare(
+    "INSERT INTO goals (id, user_id, title, description, category, days_left, progress) VALUES (?, ?, ?, ?, ?, ?, 0)"
+  ).run(id, session!.sub, title.trim(), description.trim(), category, Math.floor(daysLeft));
+
+  const goal = rowToGoal(db.prepare("SELECT * FROM goals WHERE id = ? AND user_id = ?").get(id, session!.sub) as Record<string, unknown>);
   return jsonResponse({ goal }, 201);
 }

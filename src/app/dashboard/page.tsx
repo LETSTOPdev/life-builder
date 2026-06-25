@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Progress } from "@/components/ui/progress";
 import { Target, Flame, CheckCircle2, Sparkles, ArrowRight, Clock } from "lucide-react";
 import Link from "next/link";
+import { toast } from "sonner";
 
 interface Goal {
   id: string;
@@ -104,18 +106,28 @@ function DailyBig3() {
   );
 }
 
-export default function DashboardPage() {
+function DashboardPage() {
   const [goals, setGoals] = useState<Goal[]>([]);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [name, setName] = useState("");
   const [today, setToday] = useState("");
   const [greeting, setGreeting] = useState("");
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
   useEffect(() => {
     const now = new Date();
     setToday(now.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }));
     const hour = now.getHours();
     setGreeting(hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening");
+
+    // Show upgrade success toast when redirected back from Lemon Squeezy
+    if (searchParams.get("upgraded") === "true") {
+      const plan = searchParams.get("plan") ?? "Pro";
+      toast.success(`🎉 Welcome to ${plan.charAt(0).toUpperCase() + plan.slice(1)}! Your plan is now active.`);
+      // Clean the URL without triggering a reload
+      router.replace("/dashboard", { scroll: false });
+    }
 
     fetch("/api/goals?status=active")
       .then((r) => r.json())
@@ -256,5 +268,15 @@ export default function DashboardPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// useSearchParams requires Suspense boundary in Next.js App Router
+import { Suspense } from "react";
+export default function DashboardPageWrapper() {
+  return (
+    <Suspense>
+      <DashboardPage />
+    </Suspense>
   );
 }

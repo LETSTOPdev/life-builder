@@ -77,24 +77,31 @@ export async function POST(req: NextRequest) {
     },
   };
 
-  const res = await fetch("https://api.lemonsqueezy.com/v1/checkouts", {
-    method: "POST",
-    headers: {
-      Accept: "application/vnd.api+json",
-      "Content-Type": "application/vnd.api+json",
-      Authorization: `Bearer ${process.env.LS_API_KEY}`,
-    },
-    body: JSON.stringify(body),
-  });
-
-  const data = await res.json();
+  let res: Response;
+  let data: Record<string, unknown>;
+  try {
+    res = await fetch("https://api.lemonsqueezy.com/v1/checkouts", {
+      method: "POST",
+      headers: {
+        Accept: "application/vnd.api+json",
+        "Content-Type": "application/vnd.api+json",
+        Authorization: `Bearer ${process.env.LS_API_KEY}`,
+      },
+      body: JSON.stringify(body),
+    });
+    data = await res.json();
+  } catch (err) {
+    console.error("Lemon Squeezy API unreachable:", err);
+    return errorResponse("Payment provider is temporarily unavailable. Please try again shortly.", 503);
+  }
 
   if (!res.ok) {
-    const msg = data?.errors?.[0]?.detail ?? "Failed to create checkout";
+    const msg = (data as { errors?: { detail: string }[] })?.errors?.[0]?.detail ?? "Failed to create checkout";
+    console.error("Lemon Squeezy checkout error:", data);
     return errorResponse(msg, 500);
   }
 
-  const checkoutUrl = data?.data?.attributes?.url;
+  const checkoutUrl = (data as { data?: { attributes?: { url?: string } } })?.data?.attributes?.url;
   if (!checkoutUrl) return errorResponse("No checkout URL returned", 500);
 
   return jsonResponse({ url: checkoutUrl });

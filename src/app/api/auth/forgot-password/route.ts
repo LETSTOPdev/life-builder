@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { randomBytes } from "crypto";
 import { getDb } from "@/lib/db";
 import { newId, jsonResponse, errorResponse } from "@/lib/auth";
+import { rateLimit, clientKey } from "@/lib/rate-limit";
 
 async function sendResetEmail(to: string, resetUrl: string): Promise<void> {
   const apiKey = process.env.RESEND_API_KEY;
@@ -51,6 +52,12 @@ async function sendResetEmail(to: string, resetUrl: string): Promise<void> {
 }
 
 export async function POST(req: NextRequest) {
+  // 5 password reset requests per hour per IP
+  const rl = rateLimit(clientKey(req, "forgot-password"), 5, 60 * 60 * 1000);
+  if (!rl.ok) {
+    return errorResponse("Too many reset requests. Please wait an hour.", 429);
+  }
+
   try {
     const { email } = await req.json();
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {

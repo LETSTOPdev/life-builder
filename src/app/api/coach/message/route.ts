@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { getDb } from "@/lib/db";
 import { getSession, requireSession, newId, jsonResponse, errorResponse } from "@/lib/auth";
+import { getLimits } from "@/lib/plan-limits";
 
 const client = process.env.ANTHROPIC_API_KEY ? new Anthropic() : null;
 
@@ -26,11 +27,29 @@ export async function POST(req: NextRequest) {
   const { message } = await req.json();
   if (!message || typeof message !== "string" || !message.trim())
     return errorResponse("Message is required");
+  if (message.trim().length > 2000)
+    return errorResponse("Message must be under 2000 characters");
 
   const db = getDb();
   const userId = session!.sub;
 
-  const user = db.prepare("SELECT name, plan FROM users WHERE id = ?").get(userId) as Record<string, unknown> | undefined;
+  const user = db.prepare("SELECT name, plan FROM users WHERE id = ?").get(userId) as { name: string; plan: string } | undefined;
+  const limits = getLimits(user?.plan ?? "free");
+
+  // Plan limit: free users get 5 AI coach messages per day
+  if (limits.coachMessagesPerDay !== Infinity) {
+    const todayCount = (db.prepare(
+      "SELECT COUNT(*) as count FROM coach_messages WHERE user_id = ? AND role = 'user' AND date(created_at) = date('now')"
+    ).get(userId) as { count: number }).count;
+
+    if (todayCount >= limits.coachMessagesPerDay) {
+      return errorResponse(
+        `Free plan includes ${limits.coachMessagesPerDay} AI coach messages per day. Upgrade to Pro for unlimited coaching.`,
+        403
+      );
+    }
+  }
+
   const goals = db.prepare("SELECT title, category, progress, days_left, streak FROM goals WHERE user_id = ? AND status = 'active' LIMIT 5").all(userId) as Record<string, unknown>[];
 
   const history = db.prepare(

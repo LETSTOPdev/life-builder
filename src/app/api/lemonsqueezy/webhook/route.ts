@@ -11,23 +11,33 @@ function verifySignature(payload: string, sigHeader: string, secret: string): bo
   }
 }
 
-// Map Lemon Squeezy variant ID → plan name using env vars
-function planFromVariantId(variantId: string): string {
-  const map: Record<string, string> = {
-    [process.env.LS_VARIANT_PRO_MONTHLY     ?? "__"]: "pro",
-    [process.env.LS_VARIANT_PRO_ANNUAL      ?? "__"]: "pro",
-    [process.env.LS_VARIANT_PREMIUM_MONTHLY ?? "__"]: "premium",
-    [process.env.LS_VARIANT_PREMIUM_ANNUAL  ?? "__"]: "premium",
-    [process.env.LS_VARIANT_ELITE_MONTHLY   ?? "__"]: "elite",
-    [process.env.LS_VARIANT_ELITE_ANNUAL    ?? "__"]: "elite",
+const VALID_PLANS = ["pro", "premium", "elite"] as const;
+type ValidPlan = typeof VALID_PLANS[number];
+
+// Map Lemon Squeezy variant ID → plan name using env vars.
+// Returns null if the variant ID is unknown — never falls back to a free upgrade.
+function planFromVariantId(variantId: string): ValidPlan | null {
+  const map: Record<string, ValidPlan> = {
+    [process.env.LS_VARIANT_PRO_MONTHLY     ?? "__UNSET1"]: "pro",
+    [process.env.LS_VARIANT_PRO_ANNUAL      ?? "__UNSET2"]: "pro",
+    [process.env.LS_VARIANT_PREMIUM_MONTHLY ?? "__UNSET3"]: "premium",
+    [process.env.LS_VARIANT_PREMIUM_ANNUAL  ?? "__UNSET4"]: "premium",
+    [process.env.LS_VARIANT_ELITE_MONTHLY   ?? "__UNSET5"]: "elite",
+    [process.env.LS_VARIANT_ELITE_ANNUAL    ?? "__UNSET6"]: "elite",
   };
-  return map[variantId] ?? "pro";
+  return map[variantId] ?? null;
+}
+
+function safePlan(raw: string | undefined | null, variantId?: string): ValidPlan | null {
+  if (raw && VALID_PLANS.includes(raw as ValidPlan)) return raw as ValidPlan;
+  if (variantId) return planFromVariantId(variantId);
+  return null;
 }
 
 export async function POST(req: NextRequest) {
   const secret = process.env.LS_WEBHOOK_SECRET;
   if (!secret) {
-    console.error("LS_WEBHOOK_SECRET not set");
+    console.error("LS_WEBHOOK_SECRET not set — webhook rejected");
     return Response.json({ error: "Webhook secret not configured" }, { status: 500 });
   }
 
@@ -35,7 +45,8 @@ export async function POST(req: NextRequest) {
   const sigHeader = req.headers.get("x-signature") ?? "";
 
   if (!verifySignature(rawBody, sigHeader, secret)) {
-    return Response.json({ error: "Invalid signature" }, { status: 400 });
+    console.warn("Webhook signature verification failed");
+    return Response.json({ error: "Invalid signature" }, { status: 401 });
   }
 
   let event: {
@@ -58,14 +69,19 @@ export async function POST(req: NextRequest) {
     case "order_created": {
       const userId = custom_data?.user_id ?? (attrs.custom_data as Record<string, string>)?.user_id;
       const variantId = String((attrs.first_order_item as Record<string, unknown>)?.variant_id ?? "");
-      const plan = custom_data?.plan ?? planFromVariantId(variantId);
+      const plan = safePlan(custom_data?.plan, variantId);
       const lsCustomerId = String(attrs.customer_id ?? "");
       const lsOrderId = String(attrs.identifier ?? "");
 
+      if (!plan) {
+        console.error(`order_created: unknown variant_id="${variantId}" — no plan upgrade applied`);
+        break;
+      }
       if (userId && attrs.status === "paid") {
         db.prepare(
           "UPDATE users SET plan = ?, stripe_customer_id = ?, stripe_subscription_id = ?, updated_at = datetime('now') WHERE id = ?"
         ).run(plan, lsCustomerId, lsOrderId, userId);
+        console.log(`order_created: user ${userId} upgraded to ${plan}`);
       }
       break;
     }
@@ -75,15 +91,20 @@ export async function POST(req: NextRequest) {
     case "subscription_updated": {
       const userId = custom_data?.user_id ?? (attrs.custom_data as Record<string, string>)?.user_id;
       const variantId = String(attrs.variant_id ?? "");
-      const plan = custom_data?.plan ?? planFromVariantId(variantId);
+      const plan = safePlan(custom_data?.plan, variantId);
       const status = attrs.status as string;
       const subId = String(attrs.id ?? "");
       const lsCustomerId = String(attrs.customer_id ?? "");
 
+      if (!plan) {
+        console.error(`${event_name}: unknown variant_id="${variantId}" — no plan upgrade applied`);
+        break;
+      }
       if (userId && (status === "active" || status === "trialing")) {
         db.prepare(
           "UPDATE users SET plan = ?, stripe_customer_id = ?, stripe_subscription_id = ?, updated_at = datetime('now') WHERE id = ?"
         ).run(plan, lsCustomerId, subId, userId);
+        console.log(`${event_name}: user ${userId} → ${plan} (${status})`);
       }
       break;
     }
@@ -92,11 +113,16 @@ export async function POST(req: NextRequest) {
     case "subscription_cancelled":
     case "subscription_expired": {
       const subId = String(attrs.id ?? "");
-      db.prepare(
+      const result = db.prepare(
         "UPDATE users SET plan = 'free', stripe_subscription_id = NULL, updated_at = datetime('now') WHERE stripe_subscription_id = ?"
       ).run(subId);
+      console.log(`${event_name}: subscription ${subId} cancelled — ${result.changes} user(s) downgraded to free`);
       break;
     }
+
+    default:
+      // Log unhandled events but always return 200 to prevent LS retries
+      console.log(`Unhandled webhook event: ${event_name}`);
   }
 
   return Response.json({ received: true });

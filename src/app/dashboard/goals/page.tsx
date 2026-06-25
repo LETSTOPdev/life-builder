@@ -255,7 +255,14 @@ export default function GoalsPage() {
                   />
                 </div>
               </div>
-              {formError && <p className="text-red-500 text-xs">{formError}</p>}
+              {formError && (
+                <div className="rounded-lg bg-red-50 border border-red-200 px-3 py-2">
+                  <p className="text-red-600 text-xs">{formError}</p>
+                  {formError.includes("Upgrade") && (
+                    <a href="/upgrade" className="text-xs font-medium text-red-700 underline mt-1 inline-block">View upgrade options →</a>
+                  )}
+                </div>
+              )}
               <div className="flex gap-3 pt-2">
                 <button type="button" onClick={() => setShowModal(false)} className="flex-1 py-2.5 border border-neutral-200 text-neutral-500 text-sm rounded-full hover:text-neutral-900 hover:border-neutral-400 transition-colors cursor-pointer">
                   Cancel

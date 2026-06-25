@@ -137,7 +137,14 @@ export default function JournalPage() {
             className="w-full bg-neutral-50 border border-neutral-200 rounded-lg px-4 py-3 text-neutral-900 text-sm placeholder:text-neutral-300 focus:outline-none focus:border-neutral-400 transition-colors resize-none leading-relaxed"
             autoFocus
           />
-          {error && <p className="text-red-500 text-xs mt-2">{error}</p>}
+          {error && (
+            <div className="rounded-lg bg-red-50 border border-red-200 px-3 py-2 mt-2">
+              <p className="text-red-600 text-xs">{error}</p>
+              {error.includes("Upgrade") && (
+                <a href="/upgrade" className="text-xs font-medium text-red-700 underline mt-1 inline-block">View upgrade options →</a>
+              )}
+            </div>
+          )}
           <div className="flex gap-3 mt-3">
             <button onClick={() => setShowEditor(false)} className="px-4 py-2 border border-neutral-200 text-neutral-500 text-sm rounded-full hover:text-neutral-900 cursor-pointer transition-colors">
               Cancel

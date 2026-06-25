@@ -67,7 +67,10 @@ export default function CoachPage() {
       });
       const d = await r.json();
       if (!r.ok) {
-        setMessages((prev) => [...prev, { id: Date.now().toString() + "e", role: "assistant", content: d.error ?? "Something went wrong. Please try again." }]);
+        const errMsg = r.status === 403
+          ? (d.error ?? "Daily limit reached. Upgrade to Pro for unlimited coaching.")
+          : (d.error ?? "Something went wrong. Please try again.");
+        setMessages((prev) => [...prev, { id: Date.now().toString() + "e", role: "assistant", content: errMsg + (r.status === 403 ? "\n\nUpgrade at /upgrade ↗" : "") }]);
       } else if (d.message) {
         if (d.live !== undefined) setIsLive(d.live);
         setMessages((prev) => [...prev, { id: Date.now().toString() + "a", role: "assistant", content: d.message }]);
