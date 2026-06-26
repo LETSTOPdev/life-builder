@@ -9,6 +9,7 @@ export interface OnboardingData {
   timePerWeek: string;
   successGoal: string;
   customGoal: string;
+  personalContext: string;
 }
 
 interface OnboardingContextType {
@@ -25,6 +26,7 @@ const defaultData: OnboardingData = {
   timePerWeek: "",
   successGoal: "",
   customGoal: "",
+  personalContext: "",
 };
 
 const OnboardingContext = createContext<OnboardingContextType>({

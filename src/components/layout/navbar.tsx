@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, Zap, X } from "lucide-react";
+import { Menu, Zap, X, LayoutDashboard } from "lucide-react";
 
 const navLinks = [
   { label: "Features", href: "/#features" },
@@ -16,11 +16,16 @@ const navLinks = [
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handler, { passive: true });
     return () => window.removeEventListener("scroll", handler);
+  }, []);
+
+  useEffect(() => {
+    setIsLoggedIn(document.cookie.includes("buildr_session"));
   }, []);
 
   return (
@@ -55,18 +60,30 @@ export function Navbar() {
           </div>
 
           <div className="hidden md:flex items-center gap-2">
-            <Link
-              href="/auth/login"
-              className="text-neutral-500 hover:text-neutral-900 text-sm h-8 px-3 inline-flex items-center rounded-md transition-colors hover:bg-neutral-100"
-            >
-              Sign in
-            </Link>
-            <Link
-              href="/auth/signup"
-              className="bg-neutral-900 text-white hover:bg-neutral-700 text-sm font-medium h-8 px-4 rounded-full inline-flex items-center transition-colors"
-            >
-              Get started
-            </Link>
+            {isLoggedIn ? (
+              <Link
+                href="/dashboard"
+                className="bg-neutral-900 text-white hover:bg-neutral-700 text-sm font-medium h-8 px-4 rounded-full inline-flex items-center gap-2 transition-colors"
+              >
+                <LayoutDashboard className="w-3.5 h-3.5" />
+                Dashboard
+              </Link>
+            ) : (
+              <>
+                <Link
+                  href="/auth/login"
+                  className="text-neutral-500 hover:text-neutral-900 text-sm h-8 px-3 inline-flex items-center rounded-md transition-colors hover:bg-neutral-100"
+                >
+                  Sign in
+                </Link>
+                <Link
+                  href="/auth/signup"
+                  className="bg-neutral-900 text-white hover:bg-neutral-700 text-sm font-medium h-8 px-4 rounded-full inline-flex items-center transition-colors"
+                >
+                  Get started
+                </Link>
+              </>
+            )}
           </div>
 
           <Sheet open={open} onOpenChange={setOpen}>
@@ -104,20 +121,33 @@ export function Navbar() {
                   </Link>
                 ))}
                 <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-neutral-100">
-                  <Link
-                    href="/auth/login"
-                    onClick={() => setOpen(false)}
-                    className="text-neutral-500 hover:text-neutral-900 text-sm py-2 px-2 rounded-md hover:bg-neutral-50 transition-colors"
-                  >
-                    Sign in
-                  </Link>
-                  <Link
-                    href="/auth/signup"
-                    onClick={() => setOpen(false)}
-                    className="w-full bg-neutral-900 text-white hover:bg-neutral-700 text-sm font-medium px-4 py-2.5 rounded-full transition-colors text-center"
-                  >
-                    Get started
-                  </Link>
+                  {isLoggedIn ? (
+                    <Link
+                      href="/dashboard"
+                      onClick={() => setOpen(false)}
+                      className="w-full bg-neutral-900 text-white hover:bg-neutral-700 text-sm font-medium px-4 py-2.5 rounded-full transition-colors text-center flex items-center justify-center gap-2"
+                    >
+                      <LayoutDashboard className="w-3.5 h-3.5" />
+                      Go to Dashboard
+                    </Link>
+                  ) : (
+                    <>
+                      <Link
+                        href="/auth/login"
+                        onClick={() => setOpen(false)}
+                        className="text-neutral-500 hover:text-neutral-900 text-sm py-2 px-2 rounded-md hover:bg-neutral-50 transition-colors"
+                      >
+                        Sign in
+                      </Link>
+                      <Link
+                        href="/auth/signup"
+                        onClick={() => setOpen(false)}
+                        className="w-full bg-neutral-900 text-white hover:bg-neutral-700 text-sm font-medium px-4 py-2.5 rounded-full transition-colors text-center"
+                      >
+                        Get started
+                      </Link>
+                    </>
+                  )}
                 </div>
               </div>
             </SheetContent>

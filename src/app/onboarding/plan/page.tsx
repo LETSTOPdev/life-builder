@@ -167,6 +167,12 @@ export default function PlanPage() {
           <p className="text-[10px] font-semibold uppercase tracking-widest text-neutral-400 mb-1">Your Focus</p>
           <p className="text-neutral-900 text-sm font-medium">{goalSummary}</p>
           <p className="text-neutral-400 text-xs mt-2">Expected outcome: {outcome}</p>
+          {data.personalContext && (
+            <div className="mt-3 pt-3 border-t border-neutral-200">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-neutral-400 mb-1">Your Context</p>
+              <p className="text-neutral-500 text-xs leading-relaxed">{data.personalContext}</p>
+            </div>
+          )}
         </div>
 
         <div className="space-y-0 mb-8">
