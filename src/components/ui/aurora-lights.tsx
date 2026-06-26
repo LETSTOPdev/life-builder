@@ -12,7 +12,7 @@ export function AuroraLights({
   showRadialGradient = true,
 }: AuroraLightsProps) {
   return (
-    <div className={cn("absolute inset-0 overflow-hidden", className)}>
+    <div className={cn("absolute inset-0 overflow-hidden pointer-events-none", className)}>
       <div
         className={cn(
           `
