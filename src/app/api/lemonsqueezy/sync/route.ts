@@ -91,11 +91,13 @@ export async function POST(req: NextRequest) {
   ).run(plan, String(activeSub.attributes.customer_id), activeSub.id, user.id);
 
   // Re-issue session cookie with new plan
+  const tokenVersion = (db.prepare("SELECT token_version FROM users WHERE id = ?").get(user.id) as { token_version: number }).token_version;
   const newToken = await signToken({
     sub: user.id,
     email: user.email,
     name: user.name,
     plan,
+    ver: tokenVersion,
   });
 
   const res = jsonResponse({

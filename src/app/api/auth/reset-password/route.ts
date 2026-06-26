@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import bcrypt from "bcryptjs";
 import { getDb } from "@/lib/db";
-import { signToken, jsonResponse, errorResponse } from "@/lib/auth";
+import { signToken, revokeUserSessions, jsonResponse, errorResponse } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
   try {
@@ -35,11 +35,18 @@ export async function POST(req: NextRequest) {
       .prepare("SELECT id, email, name, plan FROM users WHERE id = ?")
       .get(record.user_id) as Record<string, string>;
 
+    // Revoke all prior sessions — reset link was just consumed; old sessions should be dead.
+    revokeUserSessions(user.id);
+    const { token_version: newVer } = db
+      .prepare("SELECT token_version FROM users WHERE id = ?")
+      .get(user.id) as { token_version: number };
+
     const sessionToken = await signToken({
       sub: user.id,
       email: user.email,
       name: user.name,
       plan: user.plan,
+      ver: newVer,
     });
 
     const secure = process.env.NODE_ENV === "production" ? "; Secure" : "";

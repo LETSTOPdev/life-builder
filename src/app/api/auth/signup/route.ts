@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
       "INSERT INTO user_notifications (id, user_id) VALUES (?, ?)"
     ).run(newId(), userId);
 
-    const token = await signToken({ sub: userId, email: email.toLowerCase(), name: name.trim(), plan: "free" });
+    const token = await signToken({ sub: userId, email: email.toLowerCase(), name: name.trim(), plan: "free", ver: 1 });
     const secure = process.env.NODE_ENV === "production" ? "; Secure" : "";
     // Never return userId or token in body — session is set via httpOnly cookie
     const res = jsonResponse({ message: "Account created" }, 201);

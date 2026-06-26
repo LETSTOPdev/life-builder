@@ -6,6 +6,11 @@ import { getLimits } from "@/lib/plan-limits";
 
 const client = process.env.ANTHROPIC_API_KEY ? new Anthropic() : null;
 
+/** Strip newlines and control characters from user-controlled strings before prompt interpolation. */
+function sanitize(s: string, maxLen = 200): string {
+  return s.slice(0, maxLen).replace(/[\r\n\t]/g, " ").trim();
+}
+
 export async function GET(req: NextRequest) {
   const session = await getSession(req);
   const guard = requireSession(session);
@@ -75,35 +80,35 @@ export async function POST(req: NextRequest) {
       ? activeGoals
           .map(
             (g) =>
-              `- ${g.title} (${g.category}): ${g.progress}% done, ${g.days_left} days left, ${g.streak}-day streak`
+              `- ${sanitize(String(g.title))} (${sanitize(String(g.category))}): ${g.progress}% done, ${g.days_left} days left, ${g.streak}-day streak`
           )
           .join("\n")
       : "No active goals yet — the user needs to create their first goal.";
 
   const completedSection =
     completedGoals.length > 0
-      ? completedGoals.map((g) => `- ${g.title} (${g.category})`).join("\n")
+      ? completedGoals.map((g) => `- ${sanitize(String(g.title))} (${sanitize(String(g.category))})`).join("\n")
       : "";
 
   const journalSection =
     recentJournal.length > 0
       ? recentJournal
-          .map((e) => `- [${e.mood}] ${e.content.slice(0, 120)}${e.content.length > 120 ? "…" : ""}`)
+          .map((e) => `- [${sanitize(e.mood, 20)}] ${sanitize(e.content, 120)}`)
           .join("\n")
       : "No journal entries yet.";
 
   const onboardingSection = onboarding.goal || onboarding.directions?.length
     ? `
 PERSONALITY & CONTEXT (from onboarding)
-- Life directions: ${onboarding.directions?.join(", ") || "Not set"}
-- Biggest challenges: ${onboarding.challenges?.join(", ") || "Not set"}
-- Current situation: ${onboarding.situation || "Not set"}
-- Time available per week: ${onboarding.timePerWeek || "Not set"}
-- Their main goal in their own words: "${onboarding.goal || "Not set"}"
-- Personal context they shared: "${onboarding.personalContext || "None"}"
-- Bio: "${user?.bio || "Not set"}"
+- Life directions: ${onboarding.directions?.map((d) => sanitize(d)).join(", ") || "Not set"}
+- Biggest challenges: ${onboarding.challenges?.map((c) => sanitize(c)).join(", ") || "Not set"}
+- Current situation: ${sanitize(onboarding.situation || "Not set")}
+- Time available per week: ${sanitize(onboarding.timePerWeek || "Not set", 50)}
+- Their main goal in their own words: "${sanitize(onboarding.goal || "Not set", 300)}"
+- Personal context they shared: "${sanitize(onboarding.personalContext || "None", 300)}"
+- Bio: "${sanitize(user?.bio || "Not set", 300)}"
 `
-    : user?.bio ? `Personal context: "${user.bio}"` : "";
+    : user?.bio ? `Personal context: "${sanitize(user.bio, 300)}"` : "";
 
   const systemPrompt = `You are an elite personal life coach inside Buildr. You are direct, warm, and specific — never generic. You know this user's data intimately and reference it.
 

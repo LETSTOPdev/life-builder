@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
-const SECRET = new TextEncoder().encode(
-  process.env.AUTH_SECRET ?? "buildr-dev-secret-change-in-production"
-);
+const rawSecret = process.env.AUTH_SECRET;
+if (!rawSecret) throw new Error("AUTH_SECRET must be set");
+const SECRET = new TextEncoder().encode(rawSecret);
 
 const PROTECTED = ["/dashboard", "/onboarding"];
 const AUTH_ROUTES = ["/auth/login", "/auth/signup", "/auth"];

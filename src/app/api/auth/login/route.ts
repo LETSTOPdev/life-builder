@@ -30,6 +30,7 @@ export async function POST(req: NextRequest) {
       email: user.email as string,
       name: user.name as string,
       plan: user.plan as string,
+      ver: user.token_version as number,
     });
 
     // JWT is set as httpOnly cookie only — never expose in response body

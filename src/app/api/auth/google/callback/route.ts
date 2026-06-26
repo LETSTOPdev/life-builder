@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { randomBytes } from "crypto";
 import { getDb } from "@/lib/db";
 import { signToken, newId } from "@/lib/auth";
 
@@ -65,12 +66,12 @@ export async function GET(req: NextRequest) {
   if (!user) {
     const userId = newId();
     const name = googleUser.name ?? googleUser.email.split("@")[0];
-    // OAuth users get a random unusable password hash (they sign in via Google)
-    const fakeHash = `oauth_google_${randomHex()}`;
+    // OAuth users get an unusable random password — auth_provider column marks the account type.
+    const unusablePassword = `__oauth__${randomBytes(16).toString("hex")}`;
 
     db.prepare(
-      "INSERT INTO users (id, email, name, password, plan) VALUES (?, ?, ?, ?, 'free')"
-    ).run(userId, googleUser.email.toLowerCase(), name, fakeHash);
+      "INSERT INTO users (id, email, name, password, auth_provider, plan) VALUES (?, ?, ?, ?, 'google', 'free')"
+    ).run(userId, googleUser.email.toLowerCase(), name, unusablePassword);
 
     db.prepare(
       "INSERT INTO user_notifications (id, user_id) VALUES (?, ?)"
@@ -81,11 +82,14 @@ export async function GET(req: NextRequest) {
       .get(userId) as Record<string, string>;
   }
 
+  const tokenVersion = (db.prepare("SELECT token_version FROM users WHERE id = ?").get(user.id) as { token_version: number }).token_version;
+
   const token = await signToken({
     sub: user.id,
     email: user.email,
     name: user.name,
     plan: user.plan,
+    ver: tokenVersion,
   });
 
   const isNewUser = !db
@@ -98,15 +102,11 @@ export async function GET(req: NextRequest) {
   res.cookies.set("buildr_session", token, {
     httpOnly: true,
     sameSite: "lax",
-    maxAge: 60 * 60 * 24 * 7, // 7 days
+    maxAge: 60 * 60 * 24 * 7,
     path: "/",
+    secure: process.env.NODE_ENV === "production",
   });
   res.cookies.delete("oauth_state");
 
   return res;
-}
-
-function randomHex() {
-  const { randomBytes } = require("crypto");
-  return randomBytes(16).toString("hex");
 }

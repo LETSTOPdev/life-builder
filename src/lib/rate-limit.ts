@@ -39,9 +39,15 @@ export function rateLimit(
   return { ok: entry.count <= max, remaining, resetAt: entry.resetAt };
 }
 
-/** Extract a stable key from the request (IP → X-Forwarded-For → fallback). */
+/**
+ * Extract a stable key from the request.
+ * Uses the rightmost IP in X-Forwarded-For — the leftmost is user-controlled
+ * and trivially spoofed. The rightmost is set by the trusted reverse proxy.
+ */
 export function clientKey(req: Request, suffix = ""): string {
   const fwd = (req.headers as Headers).get("x-forwarded-for");
-  const ip = fwd ? fwd.split(",")[0].trim() : "unknown";
+  const ip = fwd
+    ? fwd.split(",").map((s) => s.trim()).at(-1) ?? "unknown"
+    : "unknown";
   return suffix ? `${ip}:${suffix}` : ip;
 }
