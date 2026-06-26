@@ -50,28 +50,79 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  const goals = db.prepare("SELECT title, category, progress, days_left, streak FROM goals WHERE user_id = ? AND status = 'active' LIMIT 5").all(userId) as Record<string, unknown>[];
+  const goals = db.prepare(
+    "SELECT title, category, progress, days_left, streak, status FROM goals WHERE user_id = ? ORDER BY created_at DESC LIMIT 10"
+  ).all(userId) as Record<string, unknown>[];
+
+  const recentJournal = db.prepare(
+    "SELECT mood, content, created_at FROM journal_entries WHERE user_id = ? ORDER BY created_at DESC LIMIT 3"
+  ).all(userId) as { mood: string; content: string; created_at: string }[];
 
   const history = db.prepare(
     "SELECT role, content FROM coach_messages WHERE user_id = ? ORDER BY created_at ASC LIMIT 20"
   ).all(userId) as { role: string; content: string }[];
 
-  const systemPrompt = `You are a personal life coach inside Buildr, an AI-powered personal development app.
+  const activeGoals = goals.filter((g) => g.status === "active");
+  const completedGoals = goals.filter((g) => g.status === "completed");
 
-User: ${user?.name ?? session!.name}
+  const goalsSection =
+    activeGoals.length > 0
+      ? activeGoals
+          .map(
+            (g) =>
+              `- ${g.title} (${g.category}): ${g.progress}% done, ${g.days_left} days left, ${g.streak}-day streak`
+          )
+          .join("\n")
+      : "No active goals yet — the user needs to create their first goal.";
+
+  const completedSection =
+    completedGoals.length > 0
+      ? completedGoals.map((g) => `- ${g.title} (${g.category})`).join("\n")
+      : "";
+
+  const journalSection =
+    recentJournal.length > 0
+      ? recentJournal
+          .map((e) => `- [${e.mood}] ${e.content.slice(0, 120)}${e.content.length > 120 ? "…" : ""}`)
+          .join("\n")
+      : "No journal entries yet.";
+
+  const systemPrompt = `You are an elite personal life coach inside Buildr. You are direct, warm, and specific — never generic. You know this user's data intimately and reference it.
+
+USER PROFILE
+Name: ${user?.name ?? session!.name}
 Plan: ${user?.plan ?? "free"}
-Active goals:
-${goals.map((g) => `- ${g.title} (${g.category}): ${g.progress}% complete, ${g.days_left} days left, ${g.streak}-day streak`).join("\n") || "No goals yet."}
 
-Be direct, specific, and motivating. Keep responses concise (2-4 sentences). Draw on the user's actual goals. No fluff.`;
+ACTIVE GOALS
+${goalsSection}
+${completedSection ? `\nCOMPLETED GOALS\n${completedSection}` : ""}
 
-  const fallbacks = [
-    `Great question. Looking at your progress — ${goals[0] ? `${goals[0].title} at ${goals[0].progress}%` : "your goals"} — consistency is what separates people who succeed from those who don't. What's one small action you can take today?`,
-    "The data shows your best days are when you start with your hardest task. What's the thing you've been avoiding that would move the needle most?",
-    "Progress isn't linear. The fact you're here asking means you're still in the game. Break today's goal into 25-minute focused blocks.",
-    "Your streak matters more than any single day. Protect it — even 5 minutes counts toward maintaining momentum.",
-    "You're building identity, not just habits. Ask yourself: what would the person who already achieved this goal do right now?",
-  ];
+RECENT JOURNAL (mood + excerpt)
+${journalSection}
+
+COACHING RULES
+- Always reference the user's actual goals, progress numbers, or journal mood when relevant.
+- If they have no goals: warmly guide them to set their first goal. Ask what area of life matters most right now. Don't say "I can't help without goals" — say "Let's create your first goal together."
+- If they ask about consistency: look at their streak numbers and give specific advice tied to their lowest-streak goal.
+- Keep responses to 3-5 sentences max. No bullet points unless listing options.
+- Never use hollow phrases like "Great question!", "Certainly!", or "As your AI coach".
+- End with either a specific action or a direct question — never a generic closer.
+- Be the coach they need, not the one that tells them what they want to hear.`;
+
+  const fallbacks =
+    activeGoals.length > 0
+      ? [
+          `${activeGoals[0].title} is at ${activeGoals[0].progress}% — what's the one thing blocking you from moving that forward today?`,
+          `Your ${activeGoals[0].streak}-day streak on ${activeGoals[0].title} is real momentum. Don't let today be the day it breaks. What's your plan for the next 30 minutes?`,
+          `You have ${activeGoals.length} active goal${activeGoals.length > 1 ? "s" : ""}. Which one, if you made serious progress on it this week, would change everything else?`,
+          "Progress isn't linear. The fact you're here means you haven't quit. What's the smallest action that would count as a win today?",
+          "You're building identity, not just habits. What would the version of you who already achieved this do right now?",
+        ]
+      : [
+          "Let's build your first goal. What's one area of your life — career, health, learning, money — where you feel the most stuck or most excited right now?",
+          "The best time to set a goal is today. What's one outcome you want to be able to say you achieved 90 days from now?",
+          "Goals give your daily actions a direction. What's something you've been meaning to do but keep putting off? That's usually where to start.",
+        ];
 
   let replyContent: string;
   let isLive = false;

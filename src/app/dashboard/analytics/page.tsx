@@ -13,7 +13,7 @@ interface AnalyticsData {
     journalEntries: number;
     avgMood: number;
   };
-  weeklyPerformance: { day: string; completion: number }[];
+  weeklyPerformance: { day: string; completion: number | null }[];
   lifeAreas: { name: string; value: number; goals: number }[];
   weeklyReview: { wins: string[]; focus: string; recommendation: string };
 }
@@ -30,7 +30,9 @@ export default function AnalyticsPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const maxBar = data ? Math.max(...data.weeklyPerformance.map((d) => d.completion)) : 100;
+  const maxBar = data
+    ? Math.max(...data.weeklyPerformance.map((d) => d.completion ?? 0), 1)
+    : 100;
 
   const kpiCards = data
     ? [
@@ -84,8 +86,11 @@ export default function AnalyticsPage() {
               {data.weeklyPerformance.map((d) => (
                 <div key={d.day} className="flex-1 flex flex-col items-center gap-1">
                   <div
-                    className="w-full bg-neutral-200 rounded-sm transition-all"
-                    style={{ height: `${(d.completion / maxBar) * 100}%`, minHeight: "4px" }}
+                    className={`w-full rounded-sm transition-all ${d.completion === null ? "bg-neutral-100 border border-dashed border-neutral-200" : "bg-neutral-800"}`}
+                    style={{
+                      height: d.completion !== null ? `${(d.completion / maxBar) * 100}%` : "8px",
+                      minHeight: "4px",
+                    }}
                   />
                   <span className="text-neutral-400 text-[10px]">{d.day}</span>
                 </div>

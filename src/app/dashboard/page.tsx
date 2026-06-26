@@ -30,14 +30,54 @@ interface Analytics {
   };
 }
 
-// Static Daily Big 3 actions (in a real app these come from the AI/API)
-const BIG3_ACTIONS = [
-  { id: "1", label: "Review your top goal and write one next step", category: "Focus" },
-  { id: "2", label: "Complete a 20-minute deep work block before noon", category: "Productivity" },
-  { id: "3", label: "Journal for 5 minutes on what's working", category: "Reflection" },
-];
+function generateBig3(goals: Goal[]): { id: string; label: string; category: string }[] {
+  if (goals.length === 0) {
+    return [
+      { id: "1", label: "Set your first goal — go to Goals and add one now", category: "Setup" },
+      { id: "2", label: "Write your first journal entry about what you want to achieve", category: "Reflection" },
+      { id: "3", label: "Ask your AI coach what area to focus on first", category: "Coaching" },
+    ];
+  }
 
-function DailyBig3() {
+  const actions: { id: string; label: string; category: string }[] = [];
+
+  // Top goal by lowest progress (needs most help)
+  const sorted = [...goals].sort((a, b) => a.progress - b.progress);
+  const needsWork = sorted[0];
+  actions.push({
+    id: "1",
+    label: `Move "${needsWork.title}" forward — spend 25 minutes on it right now`,
+    category: needsWork.category,
+  });
+
+  // Streak protection: lowest streak goal
+  const lowestStreak = [...goals].sort((a, b) => a.streak - b.streak)[0];
+  if (lowestStreak.id !== needsWork.id) {
+    actions.push({
+      id: "2",
+      label: `Keep your streak alive on "${lowestStreak.title}" — check in today`,
+      category: lowestStreak.category,
+    });
+  } else {
+    actions.push({
+      id: "2",
+      label: "Journal for 5 minutes: what's working and what's blocking you?",
+      category: "Reflection",
+    });
+  }
+
+  // Always end with reflection
+  actions.push({
+    id: "3",
+    label: `Review all ${goals.length} active goal${goals.length > 1 ? "s" : ""} and update your progress numbers`,
+    category: "Review",
+  });
+
+  return actions;
+}
+
+function DailyBig3({ goals }: { goals: Goal[] }) {
+  const big3 = generateBig3(goals);
   const [done, setDone] = useState<Record<string, boolean>>({});
 
   const toggle = (id: string) =>
@@ -54,7 +94,7 @@ function DailyBig3() {
         </div>
         <div className="text-right">
           <span className="text-white text-sm font-bold">{completedCount}</span>
-          <span className="text-neutral-500 text-sm">/3</span>
+          <span className="text-neutral-500 text-sm">/{big3.length}</span>
         </div>
       </div>
 
@@ -62,12 +102,12 @@ function DailyBig3() {
       <div className="h-0.5 bg-white/10 rounded-full mb-4 overflow-hidden">
         <div
           className="h-full bg-white rounded-full transition-all duration-500"
-          style={{ width: `${(completedCount / 3) * 100}%` }}
+          style={{ width: `${(completedCount / big3.length) * 100}%` }}
         />
       </div>
 
       <div className="space-y-2">
-        {BIG3_ACTIONS.map((action, i) => (
+        {big3.map((action, i) => (
           <button
             key={action.id}
             onClick={() => toggle(action.id)}
@@ -97,7 +137,7 @@ function DailyBig3() {
         ))}
       </div>
 
-      {completedCount === 3 && (
+      {completedCount === big3.length && (
         <div className="mt-4 text-center">
           <p className="text-white text-sm font-semibold">All done! 🎯 Great work today.</p>
         </div>
@@ -189,7 +229,7 @@ function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Left column: Daily Big 3 + Goals */}
         <div className="lg:col-span-2">
-          <DailyBig3 />
+          <DailyBig3 goals={goals} />
 
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-neutral-900 font-semibold text-sm">Active Goals</h2>
