@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Check, Loader2 } from "lucide-react";
+import { Check, Loader2, RefreshCw } from "lucide-react";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { toast } from "sonner";
@@ -86,6 +86,29 @@ const faqs = [
 export default function UpgradePage() {
   const [annual, setAnnual] = useState(false);
   const [loading, setLoading] = useState<string | null>(null);
+  const [syncing, setSyncing] = useState(false);
+
+  const handleSync = async () => {
+    setSyncing(true);
+    try {
+      const res = await fetch("/api/lemonsqueezy/sync", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error ?? "Sync failed. Make sure you're signed in.");
+        return;
+      }
+      if (data.synced) {
+        toast.success(`Plan updated to ${data.plan}! Redirecting to your dashboard…`);
+        setTimeout(() => { window.location.href = "/dashboard"; }, 1500);
+      } else {
+        toast.error(data.message ?? "No active subscription found for your account.");
+      }
+    } catch {
+      toast.error("Network error. Please try again.");
+    } finally {
+      setSyncing(false);
+    }
+  };
 
   const handleUpgrade = async (planKey: string) => {
     setLoading(planKey);
@@ -119,6 +142,21 @@ export default function UpgradePage() {
       <Navbar />
 
       <div className="max-w-5xl mx-auto px-6 pt-28 pb-20">
+        <div className="bg-neutral-50 border border-neutral-200 rounded-xl px-5 py-4 mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div>
+            <p className="text-neutral-900 text-sm font-medium">Already subscribed?</p>
+            <p className="text-neutral-500 text-xs mt-0.5">If you paid but your plan hasn&apos;t updated, sync it now.</p>
+          </div>
+          <button
+            onClick={handleSync}
+            disabled={syncing}
+            className="flex items-center gap-2 bg-neutral-900 text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-neutral-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed whitespace-nowrap cursor-pointer"
+          >
+            {syncing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
+            {syncing ? "Syncing…" : "Sync my plan"}
+          </button>
+        </div>
+
         <div className="text-center mb-14">
           <p className="text-neutral-400 text-xs font-medium tracking-widest uppercase mb-4">Pricing</p>
           <h1 className="text-4xl sm:text-5xl font-bold text-neutral-900 mb-4 tracking-tight leading-tight">
