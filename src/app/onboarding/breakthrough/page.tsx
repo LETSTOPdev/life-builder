@@ -3,36 +3,88 @@
 import { useRouter } from "next/navigation";
 import { ArrowRight, TrendingUp, Target, Zap, AlertCircle } from "lucide-react";
 import { OnboardingShell } from "@/components/onboarding/onboarding-shell";
+import { useOnboarding } from "@/context/onboarding-context";
 
-const insights = [
-  {
-    icon: Target,
-    label: "Primary Direction",
-    value: "Career transition into high-growth field",
-    sub: "Based on your goals and current situation",
-  },
-  {
-    icon: TrendingUp,
-    label: "Potential Strengths",
-    value: "Consistency · Adaptability · Clear intent",
-    sub: "Identified from your responses",
-  },
-  {
-    icon: Zap,
-    label: "Opportunity Score",
-    value: "82 / 100",
-    sub: "Strong potential with focused effort",
-  },
-  {
-    icon: AlertCircle,
-    label: "Likely Challenges",
-    value: "Motivation dips · Clarity gaps",
-    sub: "Your plan addresses these directly",
-  },
-];
+function deriveInsights(data: {
+  directions: string[];
+  challenges: string[];
+  timePerWeek: string;
+  situation: string;
+}) {
+  // Primary direction: join selected directions or fallback
+  const primaryDirection =
+    data.directions.length > 0
+      ? data.directions.join(" · ")
+      : "Personal growth and development";
+
+  // Strengths derived from what they selected + time commitment
+  const strengths: string[] = ["Clear intent"];
+  if (data.timePerWeek && !data.timePerWeek.includes("Less than")) strengths.unshift("Consistency");
+  if (data.directions.length > 1) strengths.push("Adaptability");
+  if (data.challenges.includes("I have too many ideas")) strengths.push("Creative thinking");
+  if (data.situation) strengths.push("Self-awareness");
+  const strengthsDisplay = strengths.slice(0, 3).join(" · ");
+
+  // Opportunity score: based on clarity + time commitment
+  let score = 60;
+  if (data.directions.length > 0) score += 10;
+  if (data.challenges.length > 0) score += 5; // knowing your challenges is self-aware
+  if (data.timePerWeek?.includes("10+") || data.timePerWeek?.includes("7–10")) score += 15;
+  else if (data.timePerWeek?.includes("4–6")) score += 10;
+  else if (data.timePerWeek?.includes("1–3")) score += 5;
+  if (data.situation) score += 5;
+  score = Math.min(score, 98);
+
+  let scoreLabel = "Strong potential with focused effort";
+  if (score >= 85) scoreLabel = "Exceptional potential — you're ready to move fast";
+  else if (score >= 75) scoreLabel = "Strong potential with focused effort";
+  else scoreLabel = "Great starting point — clarity will unlock growth";
+
+  // Challenges: show what they actually selected, condensed
+  const challengeDisplay =
+    data.challenges.length > 0
+      ? data.challenges
+          .map((c) => c.replace(/^I (don't|lose|struggle with|need|feel|lack|have)/, "").trim())
+          .map((c) => c.charAt(0).toUpperCase() + c.slice(1))
+          .slice(0, 3)
+          .join(" · ")
+      : "Getting started · Staying consistent";
+
+  return { primaryDirection, strengthsDisplay, score, scoreLabel, challengeDisplay };
+}
 
 export default function BreakthroughPage() {
   const router = useRouter();
+  const { data } = useOnboarding();
+  const { primaryDirection, strengthsDisplay, score, scoreLabel, challengeDisplay } =
+    deriveInsights(data);
+
+  const insights = [
+    {
+      icon: Target,
+      label: "Primary Direction",
+      value: primaryDirection,
+      sub: "Based on your goals and current situation",
+    },
+    {
+      icon: TrendingUp,
+      label: "Potential Strengths",
+      value: strengthsDisplay,
+      sub: "Identified from your responses",
+    },
+    {
+      icon: Zap,
+      label: "Opportunity Score",
+      value: `${score} / 100`,
+      sub: scoreLabel,
+    },
+    {
+      icon: AlertCircle,
+      label: "Likely Challenges",
+      value: challengeDisplay,
+      sub: "Your plan addresses these directly",
+    },
+  ];
 
   return (
     <OnboardingShell step={6} totalSteps={7} showProgress={false}>
