@@ -94,6 +94,9 @@ function migrate(db: Database.Database) {
   if (!colNames.includes("stripe_subscription_id")) {
     db.exec("ALTER TABLE users ADD COLUMN stripe_subscription_id TEXT");
   }
+  if (!colNames.includes("onboarding_summary")) {
+    db.exec("ALTER TABLE users ADD COLUMN onboarding_summary TEXT NOT NULL DEFAULT ''");
+  }
 
   // Password reset tokens table
   db.exec(`

@@ -1,8 +1,10 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Check, Zap } from "lucide-react";
+import { useOnboarding } from "@/context/onboarding-context";
 
 const features = [
   "Personalized roadmap",
@@ -23,6 +25,21 @@ const item = {
 };
 
 export default function ReadyPage() {
+  const router = useRouter();
+  const { data } = useOnboarding();
+  const saved = useRef(false);
+
+  useEffect(() => {
+    if (saved.current) return;
+    saved.current = true;
+    // Persist onboarding personality to DB so AI features can use it everywhere
+    fetch("/api/user/onboarding", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    }).catch(() => {});
+  }, [data]);
+
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4 py-16">
       <motion.div
@@ -66,15 +83,14 @@ export default function ReadyPage() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7 }}
         >
-          <Link href="/dashboard">
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full bg-neutral-900 text-white font-semibold py-3.5 rounded-full text-sm cursor-pointer hover:bg-neutral-700 transition-colors"
-            >
-              Enter Dashboard
-            </motion.button>
-          </Link>
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => router.push("/dashboard")}
+            className="w-full bg-neutral-900 text-white font-semibold py-3.5 rounded-full text-sm cursor-pointer hover:bg-neutral-700 transition-colors"
+          >
+            Enter Dashboard
+          </motion.button>
         </motion.div>
       </motion.div>
     </div>

@@ -33,7 +33,12 @@ export async function POST(req: NextRequest) {
   const db = getDb();
   const userId = session!.sub;
 
-  const user = db.prepare("SELECT name, plan FROM users WHERE id = ?").get(userId) as { name: string; plan: string } | undefined;
+  const user = db.prepare("SELECT name, plan, bio, onboarding_summary FROM users WHERE id = ?").get(userId) as { name: string; plan: string; bio: string; onboarding_summary: string } | undefined;
+
+  let onboarding: { directions?: string[]; challenges?: string[]; situation?: string; timePerWeek?: string; goal?: string; personalContext?: string } = {};
+  if (user?.onboarding_summary) {
+    try { onboarding = JSON.parse(user.onboarding_summary); } catch {}
+  }
   const limits = getLimits(user?.plan ?? "free");
 
   // Plan limit: free users get 5 AI coach messages per day
@@ -87,11 +92,25 @@ export async function POST(req: NextRequest) {
           .join("\n")
       : "No journal entries yet.";
 
+  const onboardingSection = onboarding.goal || onboarding.directions?.length
+    ? `
+PERSONALITY & CONTEXT (from onboarding)
+- Life directions: ${onboarding.directions?.join(", ") || "Not set"}
+- Biggest challenges: ${onboarding.challenges?.join(", ") || "Not set"}
+- Current situation: ${onboarding.situation || "Not set"}
+- Time available per week: ${onboarding.timePerWeek || "Not set"}
+- Their main goal in their own words: "${onboarding.goal || "Not set"}"
+- Personal context they shared: "${onboarding.personalContext || "None"}"
+- Bio: "${user?.bio || "Not set"}"
+`
+    : user?.bio ? `Personal context: "${user.bio}"` : "";
+
   const systemPrompt = `You are an elite personal life coach inside Buildr. You are direct, warm, and specific — never generic. You know this user's data intimately and reference it.
 
 USER PROFILE
 Name: ${user?.name ?? session!.name}
 Plan: ${user?.plan ?? "free"}
+${onboardingSection}
 
 ACTIVE GOALS
 ${goalsSection}
