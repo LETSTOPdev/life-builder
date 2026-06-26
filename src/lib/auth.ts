@@ -3,23 +3,23 @@ import { SignJWT, jwtVerify } from "jose";
 import { getDb } from "./db";
 import { randomUUID } from "crypto";
 
-if (process.env.NODE_ENV === "production" && !process.env.AUTH_SECRET) {
+// Fail fast — no hardcoded fallback secret.
+const rawSecret = process.env.AUTH_SECRET;
+if (!rawSecret) {
   throw new Error(
-    "AUTH_SECRET environment variable must be set in production. " +
-    "Generate one with: openssl rand -base64 32"
+    "AUTH_SECRET environment variable must be set. Generate one with: openssl rand -base64 32"
   );
 }
-
-const SECRET = new TextEncoder().encode(
-  process.env.AUTH_SECRET ?? "buildr-dev-secret-change-in-production"
-);
+const SECRET = new TextEncoder().encode(rawSecret);
 const COOKIE_NAME = "buildr_session";
+const SECURE = process.env.NODE_ENV === "production" ? "; Secure" : "";
 
 export interface JWTPayload {
   sub: string;       // user id
   email: string;
   name: string;
   plan: string;
+  ver: number;       // token version — incremented on logout / password change
   iat?: number;
   exp?: number;
 }
@@ -35,7 +35,17 @@ export async function signToken(payload: Omit<JWTPayload, "iat" | "exp">): Promi
 export async function verifyToken(token: string): Promise<JWTPayload | null> {
   try {
     const { payload } = await jwtVerify(token, SECRET);
-    return payload as unknown as JWTPayload;
+    const p = payload as unknown as JWTPayload;
+
+    // Check token version against DB to support revocation (logout, password change).
+    const db = getDb();
+    const user = db
+      .prepare("SELECT token_version FROM users WHERE id = ?")
+      .get(p.sub) as { token_version: number } | undefined;
+
+    if (!user || user.token_version !== p.ver) return null;
+
+    return p;
   } catch {
     return null;
   }
@@ -54,6 +64,14 @@ export function requireSession(session: JWTPayload | null): Response | null {
   return null;
 }
 
+/** Increment token_version to invalidate all existing sessions for this user. */
+export function revokeUserSessions(userId: string): void {
+  const db = getDb();
+  db.prepare(
+    "UPDATE users SET token_version = token_version + 1, updated_at = datetime('now') WHERE id = ?"
+  ).run(userId);
+}
+
 export function newId(): string {
   return randomUUID();
 }
@@ -69,7 +87,7 @@ export function errorResponse(message: string, status = 400): Response {
 export function setSessionCookie(res: Response, token: string): Response {
   res.headers.set(
     "Set-Cookie",
-    `${COOKIE_NAME}=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=604800`
+    `${COOKIE_NAME}=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=604800${SECURE}`
   );
   return res;
 }
@@ -77,7 +95,7 @@ export function setSessionCookie(res: Response, token: string): Response {
 export function clearSessionCookie(res: Response): Response {
   res.headers.set(
     "Set-Cookie",
-    `${COOKIE_NAME}=; Path=/; HttpOnly; Max-Age=0`
+    `${COOKIE_NAME}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${SECURE}`
   );
   return res;
 }

@@ -85,7 +85,7 @@ function migrate(db: Database.Database) {
     -- Stripe columns (added via ALTER TABLE so they don't break existing DBs)
   `);
 
-  // Safely add Stripe columns if they don't exist yet
+  // Safely add columns that don't exist yet
   const cols = db.prepare("PRAGMA table_info(users)").all() as { name: string }[];
   const colNames = cols.map((c) => c.name);
   if (!colNames.includes("stripe_customer_id")) {
@@ -96,6 +96,15 @@ function migrate(db: Database.Database) {
   }
   if (!colNames.includes("onboarding_summary")) {
     db.exec("ALTER TABLE users ADD COLUMN onboarding_summary TEXT NOT NULL DEFAULT ''");
+  }
+  // token_version enables server-side session revocation (logout, password change).
+  if (!colNames.includes("token_version")) {
+    db.exec("ALTER TABLE users ADD COLUMN token_version INTEGER NOT NULL DEFAULT 1");
+  }
+  // auth_provider replaces the fragile oauth_google_ password sentinel.
+  if (!colNames.includes("auth_provider")) {
+    db.exec("ALTER TABLE users ADD COLUMN auth_provider TEXT NOT NULL DEFAULT 'local'");
+    db.exec("UPDATE users SET auth_provider = 'google' WHERE password LIKE 'oauth_google_%'");
   }
 
   // Password reset tokens table
