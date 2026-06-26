@@ -25,7 +25,7 @@ export function Navbar() {
   }, []);
 
   useEffect(() => {
-    setIsLoggedIn(document.cookie.includes("buildr_session"));
+    fetch("/api/auth/me").then(r => r.json()).then(d => setIsLoggedIn(!!d.user));
   }, []);
 
   return (
